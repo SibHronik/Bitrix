@@ -44,41 +44,8 @@ class strlog_userupdate extends CModule
 		global $APPLICATION;
 		$context = Application::getInstance()->getContext();
 		$request = $context->getRequest();
-		if ($request["step"] < 2) {
-			$APPLICATION->IncludeAdminFile(Loc::GetMessage('USERUPDATE_UNSTEP'), $_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/strlog.userupdate/install/unstep1.php");
-		} elseif ($request["step"] == 2) {
-			$this->uninstallEvents();
-			$this->uninstallFiles();
-			if ($request['savedata'] != 'Y') {
-
-			}
-			ModuleManager::unRegisterModule($this->MODULE_ID);
-			$APPLICATION->IncludeAdminFile(Loc::GetMessage('USERUPDATE_UNSTEP'), $_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/strlog.userupdate/install/unstep2.php");
-		}
+		$this->uninstallEvents();
+		$this->uninstallFiles();
+		ModuleManager::unRegisterModule($this->MODULE_ID);
     }
-
-	function GetModuleRightList()
-	{
-		return array(
-			"reference_id" => array("D", "K", "S", "W"),
-			"reference" => array(
-				"[D] "."Доступ закрыт",
-				"[K] "."Настройка личных данных",
-				"[S] "."Доступ открыт всем",
-				"[W] "."Админский доступ",
-			),
-		);
-	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
