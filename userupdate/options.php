@@ -10,12 +10,6 @@ use \Strlog\Userupdate\Classes\HLFields;
 use \Strlog\Userupdate\Classes\UserFields;
 use \Strlog\Userupdate\Classes\CheckUsers;
 
-include('classes/Check.php');
-include('classes/Merger.php');
-include('classes/UserData.php');
-include('classes/HLFields.php');
-include('classes/UserFields.php');
-
 $module_id = 'strlog.userupdate';
 
 Loc::loadMessages($_SERVER["DOCUMENT_ROOT"].BX_ROOT."/modules/main/options.php");
