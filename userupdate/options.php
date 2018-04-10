@@ -25,18 +25,23 @@ if (!empty($request['HL_ID']) && $request['HL_ID'] != '') {
 	Option::set("strlog.userupdate", "Edit_HL_Fields", $request["Edit_HL_Fields"], false);
 	$userEditFields = UserFields::getUserFields();//Получаем пользователские поля
 	$HLFieldsKeys = HLFields::getHLFields(Option::get("strlog.userupdate", "HL_ID"));//Получаем названия ключей для передачи в select
-	$countHLArrays = CheckUsers::CheckCount($request['HL_ID']);//Получаем количество массивов в Highload блоке
+	$countHLUsers = CheckUsers::CheckCount($request['HL_ID']);//Получаем количество массивов в Highload блоке
+	$opts = array(
+		array('HL_ID', 'ID highload блока в котором хранятся выгруженные пользователи', '', array('text', 5)),
+		array('Edit_User_Fields', 'По какому полю сравниваем?', '', array('selectbox', $userEditFields)),
+		array('Edit_HL_Fields', 'С каким полем сравниваем?', '', array('selectbox', $HLFieldsKeys)),
+	);
+}else{
+	$opts = array(
+		array('HL_ID', 'ID highload блока в котором хранятся выгруженные пользователи', '', array('text', 5)),
+	);
 }
 
 $aTabs = array(
 	array(
 		'DIV' => 'edit1',
 		'TAB' => 'Обновление пользователей',
-		'OPTIONS' => array(
-			array('HL_ID', 'ID highload блока в котором хранятся выгруженные пользователи', '', array('text', 5)),
-			array('Edit_User_Fields', 'По какому полю сравниваем?', '', array('selectbox', $userEditFields)),
-			array('Edit_HL_Fields', 'С каким полем сравниваем?', '', array('selectbox', $HLFieldsKeys)),
-		),
+		'OPTIONS' => $opts, 
 		'TITLE' => 'Обновление и добавление пользователей из highload блока',
 	),
 );
@@ -59,7 +64,7 @@ $tabControl = new CAdminTabControl("tabControl", $aTabs);
 	<input type="hidden" name="lang" value="<?echo LANGUAGE_ID;?>" />
 	<input type="hidden" name="id" value="strlog.userupdate" />
 	<input type="submit" name="check_users" value="Проверить наличие новых пользователей" />
-	<?php if (!empty($request['HL_ID']) && $countHLArrays >= 1 || $request['HL_ID'] != "" && $countHLArrays >= 1) {
+	<?php if (!empty($request['HL_ID']) && $countHLUsers >= 1 || $request['HL_ID'] != "" && $countHLUsers >= 1) {
 		echo '<input type="submit" name="merger_users" value="Объединить пользователей" />';
 	}
 	?>
@@ -76,8 +81,8 @@ $tabControl = new CAdminTabControl("tabControl", $aTabs);
 				<?php
 				if ($request['check_users']) {
 					if (!empty($request['HL_ID']) || $request['HL_ID'] != "") {
-						if ($countHLArrays >= 1) {
-							Merger::merge($userEditFields, $request['Edit_User_Fields'], $request['HL_ID'], $request['Edit_HL_Fields']);
+						if ($countHLUsers >= 1) {
+							CheckUsers::CheckArrays($request['HL_ID']);
 						} else {
 							echo '<span style="font-size: 16px;color: #cc0000;">Новых пользователей нет</span>';
 						}
@@ -96,25 +101,3 @@ $tabControl = new CAdminTabControl("tabControl", $aTabs);
 		</div>
 	</div>
 </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

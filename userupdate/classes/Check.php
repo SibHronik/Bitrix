@@ -22,6 +22,7 @@ class CheckUsers
 	}
 	public static function CheckArrays($highloadID)
 	{
+		echo 'Пользователи HighLoad блока: ';
 		echo '<pre>';
 		print_r(self::MainCheck($highloadID));
 		echo '</pre>';
