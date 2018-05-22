@@ -10,6 +10,11 @@ $arComponentParameters = array(
 		),
 	),
 	"PARAMETERS" => array(
+		"CALENDAR_TIME" => array(
+			"PARENT" => "CALENDAR",
+			"NAME" => GetMessage("CALENDAR_TIME"),
+			"TYPE" => "CHECKBOX",
+		),
 		"CALENDAR_TYPE" => array(
 			"PARENT" => "CALENDAR",
 			"NAME" => GetMessage("CALENDAR_DATE"),
@@ -22,14 +27,28 @@ $arComponentParameters = array(
 	),
 );
 
+$is_time = '';
+if ($arParams['CALENDAR_TIME'] == 'Y') {
+	$is_time = true;
+} else {
+	$is_time = false;
+}
 ?>
 
 <script>
 	$(document).ready(function(){
+		var is_time = <?php echo $is_time;?>
 		$(document).on('click', 'input', function(){ 
 			var calendarPick = $(this).attr('name');
+			if (calendarPick == 'CALENDAR_TIME') {
+				if ($(this).is(':checked')) {
+					is_time = true;
+				} else {
+					is_time = false;
+				}
+			}
 			if (calendarPick == 'CALENDAR_TYPE[]') {
-				BX.calendar({node: this, field: this, bTime: false});
+				BX.calendar({node: this, field: this, bTime: is_time});
 			}
 		});
 	});
