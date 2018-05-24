@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<users>
+	<user>
+		<user_id>1</user_id>
+		<user_name>Name_1</user_name>
+		<user_last_name>Last_Name_1</user_last_name>
+		<user_email>v.korolev87@mail.ru</user_email>
+		<user_login>Login_1</user_login>
+		<user_bonuses>5000</user_bonuses>
+		<user_ext>XML</user_ext>
+	</user>
+	<user>
+		<user_id>2</user_id>
+		<user_name>Name_2</user_name>
+		<user_last_name>Last_Name_2</user_last_name>
+		<user_email>v.korolev87@mail.ru</user_email>
+		<user_login>Login_2</user_login>
+		<user_bonuses>6000</user_bonuses>
+		<user_ext>XML</user_ext>
+	</user>
+</users>

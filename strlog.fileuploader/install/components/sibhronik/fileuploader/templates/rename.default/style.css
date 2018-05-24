@@ -1,0 +1,36 @@
+#uploader{
+    padding: 25px 0;
+    text-align: center;
+}
+
+.uploader_file_label{
+    display: inline-block;
+    width: auto;
+    height: auto;
+    margin: 0;
+    padding: 10px 20px;
+    border-radius: 2px;
+    background: #00adee;
+    font-size: 14px;
+    color: #fff;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.uploader_file_label:hover{
+    background: #238cda;
+}
+
+.uploader_file{
+    display: none;
+}
+
+.notice{
+    display: inline-block;
+    width: 100%;
+    height: auto;
+    margin: 10px 0 0 0;
+    padding: 0;
+    font-size: 12px;
+    cursor: default;
+}
