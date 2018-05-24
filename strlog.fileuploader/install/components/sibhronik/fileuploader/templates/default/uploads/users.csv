@@ -1,0 +1,3 @@
+user_id;user_last_name;user_name;user_email;user_bonuses;user_login;user_ext
+1;LastName_1;Name_1;v.korolev87@mail.ru;1000;Login_1;CSV
+2;LastName_2;Name_2;v.korolev87@mail.ru;2000;Login_2;CSV

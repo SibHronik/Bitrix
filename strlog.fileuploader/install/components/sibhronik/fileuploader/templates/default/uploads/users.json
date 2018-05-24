@@ -1,0 +1,22 @@
+{
+	"users" : {
+		"0" : {
+			"user_id" : 1,
+			"user_name" : "Name_1",
+			"user_last_name" : "Last_name_1",
+			"user_email" : "v.korolev87@mail.ru",
+			"user_login" : "Login_1",
+			"user_bonuses" : 3000,
+			"user_ext" : "JSON"
+		},
+		"1" : {
+			"user_id" : 2,
+			"user_name" : "Name_2",
+			"user_last_name" : "Last_name_2",
+			"user_email" : "v.korolev87@mail.ru",
+			"user_login" : "Login_2",
+			"user_bonuses" : 4000,
+			"user_ext" : "JSON"
+		}
+	}
+}
