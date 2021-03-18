@@ -92,7 +92,8 @@ class CompanyNewsStatistics extends CBitrixComponent
             "NUM_COMMENTS",
             "NUM_COMMENTS_ALL",
             "CATEGORY_ID",
-            "VIEWS"
+            "VIEWS",
+            "PREVIEW_TEXT"
         ];
         $queryBlogPosts = CBlogPost::GetList($blogPostOrder, $blogPostFilter, false, false, $blogPostSelect);
         if (intval($queryBlogPosts->SelectedRowsCount()) > 0) {
@@ -100,6 +101,7 @@ class CompanyNewsStatistics extends CBitrixComponent
                 $querySocNetPermissions = CBlogPost::GetSocNetPostPerms($blogPost["ID"], false, $this->arParams["USERS"]);
                 if (trim($querySocNetPermissions) != "D") {
                     $blogPost["TITLE"] = trim($blogPost["TITLE"]) == "" ? "Без названия" . " [" . $blogPost["ID"] . "]" : trim($blogPost["TITLE"]);
+                    $blogPost["PREVIEW_TEXT"] = trim($blogPost["PREVIEW_TEXT"]) == "" ? "" : $blogPost["PREVIEW_TEXT"];
                     $queryComments = CBlogComment::GetList(
                         ["ID" => "DESC"],
                         ["BLOG_ID" => $blogID, "POST_ID" => $blogPost["ID"]], false, false,
@@ -266,9 +268,7 @@ class CompanyNewsStatistics extends CBitrixComponent
         try {
             $this -> includeComponentTemplate();
         } catch (Exception $error) {
-            if ($USER->IsAdmin()) {
-                print_r($error -> getMessage());
-            }
+            print_r($error -> getMessage());
         }
     }
 }

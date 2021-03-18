@@ -19,4 +19,21 @@ class CompanyNewsStatisticsActions extends \Bitrix\Main\Engine\Controller
         }
         return $result;
     }
+
+    public function UpdatePostPreviewTextAction()
+    {
+        $result = new \Bitrix\Main\Result;
+        \Bitrix\Main\Loader::includeModule("blog");
+        if (!isset($_POST["POST_ID"]) && empty($_POST["POST_ID"])) {
+            $result -> addError("POST ID is empty");
+        }
+
+        if ($result -> isSuccess()) {
+            $postID = htmlspecialcharsEx(trim($_POST["POST_ID"]));
+            $postPreviewText = htmlspecialcharsEx(trim($_POST["POST_PREVIEW_TEXT"]));
+            $updatePostID = CBlogPost::Update($postID, ["PREVIEW_TEXT" => $postPreviewText]);
+            $result -> setData(["POST_ID" => $updatePostID]);
+        }
+        return $result;
+    }
 }

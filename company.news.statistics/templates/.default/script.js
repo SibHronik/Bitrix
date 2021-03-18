@@ -1,3 +1,4 @@
+//let newsFunctions = window.addEventListener('load', (event) => {
 BX.ready(() => {
 
     let statisticsWrapper = document.getElementById('news-statistics-wrapper');
@@ -347,4 +348,80 @@ BX.ready(() => {
         }
     });
     document.getElementById('news-statistics-post-diagramms-title').click();
+
+    //Открытие/закрытие правки постов
+    document.getElementById('news-statistics-ajax-wrapper').addEventListener('click', event => {
+        if (event.target.className == 'set-post-preview-text-dropdown-button') {
+            let setPostTextWrappers = document.getElementsByClassName('news-statistics-set-preview-text-area-wrapper');
+            for (let i = 0; i < setPostTextWrappers.length; i++) {
+                setPostTextWrappers[i].style.display = 'none';
+            }
+            let postID = event.target.getAttribute('data-post-id');
+            document.getElementById('news-statistics-set-preview-text-area-wrapper-' + postID).style.display = 'block';
+        }
+    });
+
+    document.getElementById('news-statistics-ajax-wrapper').addEventListener('input', event => {
+        if (event.target.className == 'news-statistics-set-preview-text-area') {
+            let postID = event.target.getAttribute('data-post-id');
+            if (event.target.value != '') {
+                document.getElementById('news-statistics-save-preview-text-' + postID).classList.remove('news-statistics-save-preview-text-disabled');
+            } else {
+                document.getElementById('news-statistics-save-preview-text-' + postID).classList.add('news-statistics-save-preview-text-disabled');
+            }
+        }
+    });
+
+    //
+    document.getElementById('news-statistics-ajax-wrapper').addEventListener('click', event => {
+        if (event.target.className == 'news-statistics-save-preview-text') {
+            let postID = event.target.getAttribute('data-post-id');
+            let postPreviewText = document.getElementById('news-statistics-set-preview-text-area-' + postID).value;
+            BX.ajax.runComponentAction('uradugi:company.news.statistics', 'UpdatePostPreviewText', {
+                mode: 'ajax',
+                data: {POST_ID: postID, POST_PREVIEW_TEXT: postPreviewText}
+            }).then((response) => {
+                if (response.status == 'success' && response.errors.length < 1) {
+                    let setPostPreviewTextSuccess = document.getElementById('news-statistics-save-preview-text-success-' + postID);
+                    setPostPreviewTextSuccess.style.display = 'block';
+                    function hideSuccessUpdatePostPreviewText() {
+                        setPostPreviewTextSuccess.style.display = 'none';
+                    } setTimeout(hideSuccessUpdatePostPreviewText, 2000);
+                } else {
+                    let setPostPreviewTextError = document.getElementById('news-statistics-save-preview-text-error-' + postID);
+                    setPostPreviewTextError.style.display = 'block';
+                    function hideErrorUpdatePostPreviewText() {
+                        setPostPreviewTextSuccess.style.display = 'none';
+                    } setTimeout(hideErrorUpdatePostPreviewText, 2000);
+                }
+            }, (response) => {
+                let setPostPreviewTextError = document.getElementById('news-statistics-save-preview-text-error-' + postID);
+                setPostPreviewTextError.style.display = 'block';
+                function hideErrorUpdatePostPreviewText() {
+                    setPostPreviewTextSuccess.style.display = 'none';
+                } setTimeout(hideErrorUpdatePostPreviewText, 2000);
+            });
+        }
+    });
+
+    //Пагинация постов
+    document.getElementById('news-statistics-ajax-wrapper').addEventListener('click', event => {
+        if (event.target.className == 'news-statistics-set-post-preview-text-pagination-point') {
+            let postLists = document.getElementsByClassName('news-statistics-set-post-preview-text-list');
+            let paginationLists = document.getElementsByClassName('news-statistics-set-post-preview-text-pagination-point');
+            let postListCount = event.target.getAttribute('data-post-list');
+            if (parseInt(postListCount) && parseInt(postListCount) > 0) {
+                for (let i = 0; i < postLists.length; i++) {
+                    postLists[i].style.display = 'none';
+                }
+                document.getElementById('news-statistics-set-post-preview-text-list-' + postListCount).style.display = 'block';
+
+                for (let i = 0; i < paginationLists.length; i++) {
+                    paginationLists[i].classList.remove('news-statistics-set-post-preview-text-pagination-point-active');
+                }
+                event.target.classList.add('news-statistics-set-post-preview-text-pagination-point-active');
+            }
+        }
+    });
+
 });

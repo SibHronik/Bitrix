@@ -148,6 +148,70 @@ Asset::getInstance()->addJs("https://cdn.amcharts.com/lib/4/themes/animated.js")
                 </ul>
             </div>
             <?php endif; ?>
+            <div class="news-statistics-set-post-preview-text-wrapper">
+                <div class="news-statistics-set-post-preview-text-title">Список постов</div>
+                <?php if (count($arResult["POSTS"]) > 0): ?>
+                    <?php $arPosts = array_chunk($arResult["POSTS"], 10); ?>
+                    <?php $countPosts = 0; ?>
+                    <?php foreach ($arPosts as $postChunkKey => $arPostData): ?>
+                        <?php $arPostPieces = intVal($postChunkKey) + 1; ?>
+                        <?php if (count($arPostData) > 0): ?>
+                            <ul id="news-statistics-set-post-preview-text-list-<?=$arPostPieces;?>" class="news-statistics-set-post-preview-text-list">
+                                <?php foreach ($arPostData as $postKey => $postData): ?>
+                                    <?php $countPosts += 1; ?>
+                                    <li>
+                                        <span class="news-statistics-set-post-preview-text-name">
+                                            <span class="news-statistics-set-post-preview-text-name-count">
+                                                <?=$countPosts . "</span>. " . $postData["TITLE"];?>
+                                        </span>
+                                        <span class="news-statistics-set-post-preview-text-date"> Опубликовано: <?=$postData["DATE_CREATE"];?></span>
+                                        <div class="news-statistics-set-post-preview-text-dropdown">
+                                            <span class="set-post-preview-text-dropdown-button" data-post-id="<?=$postData["ID"];?>">
+                                                Задать текст анонса
+                                            </span>
+                                        </div>
+                                            <div
+                                                id="news-statistics-set-preview-text-area-wrapper-<?=$postData["ID"];?>"
+                                                class="news-statistics-set-preview-text-area-wrapper">
+                                                <textarea data-post-id="<?=$postData["ID"];?>"
+                                                      id="news-statistics-set-preview-text-area-<?=$postData["ID"];?>"
+                                                      class="news-statistics-set-preview-text-area"
+                                                      value="<?=$postData["PREVIEW_TEXT"];?>"
+                                                ><?=$postData["PREVIEW_TEXT"];?></textarea>
+                                                <div class="news-statistics-save-preview-text-buttons-wrapper">
+                                                    <div
+                                                        data-post-id="<?=$postData["ID"];?>"
+                                                        id="news-statistics-save-preview-text-<?=$postData["ID"];?>"
+                                                        class="news-statistics-save-preview-text <?=trim($postData["PREVIEW_TEXT"]) == "" ? "news-statistics-save-preview-text-disabled" : "";?>"
+                                                    >Сохранить</div>
+                                                    <div
+                                                        id="news-statistics-save-preview-text-success-<?=$postData["ID"];?>"
+                                                        class="news-statistics-save-preview-text-success">&#10004;
+                                                    </div>
+                                                    <div
+                                                        id="news-statistics-save-preview-text-error-<?=$postData["ID"];?>"
+                                                        class="news-statistics-save-preview-text-error">Ошибка сохранения
+                                                    </div>
+                                                </div>
+                                            </div>
+                                    </li>
+                                <?php endforeach; ?>
+                            </ul>
+                        <?php endif; ?>
+                    <?php endforeach; ?>
+                    <?php if (trim($arPostPieces) != "" && intVal($arPostPieces) != 0): ?>
+                        <ul class="news-statistics-set-post-preview-text-pagination-list">
+                            <?php for ($i = 1; $i <= intVal($arPostPieces); $i++): ?>
+                                <li
+                                    data-post-list="<?=$i;?>"
+                                    class="news-statistics-set-post-preview-text-pagination-point<?=$i == 1 ? " news-statistics-set-post-preview-text-pagination-point-active" : ""; ?>">
+                                    <?=$i;?>
+                                </li>
+                            <?php endfor; ?>
+                        </ul>
+                    <?php endif;?>
+                <?php endif; ?>
+            </div>
         </div>
         <div class="news-statistics-user-data-wrapper">
             <div class="news-statistics-aside-title"><?=Loc::getMessage("USER_INFO");?></div>
@@ -191,7 +255,7 @@ Asset::getInstance()->addJs("https://cdn.amcharts.com/lib/4/themes/animated.js")
                         <?php endforeach; ?>
                         </ul>
                         <?php endif; ?>
-                        <div id="diagramm-year-<?=$publishYear;?>" class="diagramm-year" data-year="<?=$publishYear;?>"></div><div class="diagramm-test"></div>
+                        <div id="diagramm-year-<?=$publishYear;?>" class="diagramm-year" data-year="<?=$publishYear;?>"></div>
                     </li>
                     <?php endforeach; ?>
                 </ul>
