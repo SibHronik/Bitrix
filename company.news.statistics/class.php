@@ -264,11 +264,29 @@ class CompanyNewsStatistics extends CBitrixComponent
             $users = $users["USERS"];
             $this -> arResult["USERS_LIST"] = $users;
         }
+        if (!isset($users) || count($users) < 1 || empty($users)) {
+            if ($cache->startDataCache()) {
+                $queryUser = \Bitrix\Main\UserTable::getList([
+                    "filter" => ["ACTIVE" => "Y"],
+                    "select" => ["ID", "NAME", "LAST_NAME", "LOGIN"],
+                ]);
+                $users = [];
+                while ($user = $queryUser->fetch()) {
+                    $users[$user["ID"]] = $user["LAST_NAME"] . " " . $user["NAME"] . " [" . $user["LOGIN"] . "]";
+                }
+                asort($users);
+                $this -> arResult["USERS_LIST"] = $users;
+                $cache->endDataCache(["USERS" => $users]);
+            }
+        }
 
         try {
             $this -> includeComponentTemplate();
         } catch (Exception $error) {
-            print_r($error -> getMessage());
+            global $USER;
+            if ($USER->IsAdmin()) {
+                print_r($error->getMessage());
+            }
         }
     }
 }
