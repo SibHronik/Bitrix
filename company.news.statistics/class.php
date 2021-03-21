@@ -77,84 +77,96 @@ class CompanyNewsStatistics extends CBitrixComponent
         $topViews = []; //Кол-во просмотров
         $topCommentators = []; //Список комментаторов
         $publishStatistics = []; //Статистика публикаций
-        $blogPostOrder = ["ID" => "DESC"];
-        $blogPostFilter = [
-            "BLOG_ID" => $blogID,
-            "AUTHOR_ID" => $this -> arParams["USERS"],
-            "PUBLISH_STATUS" => "P"
-        ];
-        $blogPostSelect = [
-            "ID",
-            "AUTHOR_ID",
-            "TITLE",
-            "DATE_CREATE",
-            "DATE_PUBLISH",
-            "NUM_COMMENTS",
-            "NUM_COMMENTS_ALL",
-            "CATEGORY_ID",
-            "VIEWS",
-            "PREVIEW_TEXT"
-        ];
-        $queryBlogPosts = CBlogPost::GetList($blogPostOrder, $blogPostFilter, false, false, $blogPostSelect);
-        if (intval($queryBlogPosts->SelectedRowsCount()) > 0) {
-            while ($blogPost = $queryBlogPosts->fetch()) {
-                $querySocNetPermissions = CBlogPost::GetSocNetPostPerms($blogPost["ID"], false, $this->arParams["USERS"]);
+
+        /*CACHE START*/
+        $cacheTime = 3600;
+        $cacheId = "CompanyNewsStatisticsPosts" . $result["CURRENT_USER"]["ID"];
+        $cacheDir = "CompanyNewsStatistics";
+        $cache = Bitrix\Main\Data\Cache::createInstance();
+        if ($cache->initCache($cacheTime, $cacheId, $cacheDir)) {
+            $result = $cache->getVars();
+            $result = $result["RESULT"];
+        } elseif ($cache->startDataCache()) {
+            $blogPostOrder = ["ID" => "DESC"];
+            $blogPostFilter = [
+                "BLOG_ID" => $blogID,
+                "AUTHOR_ID" => $this->arParams["USERS"],
+                "PUBLISH_STATUS" => "P"
+            ];
+            $blogPostSelect = [
+                "ID",
+                "AUTHOR_ID",
+                "TITLE",
+                "DATE_CREATE",
+                "DATE_PUBLISH",
+                "NUM_COMMENTS",
+                "NUM_COMMENTS_ALL",
+                "CATEGORY_ID",
+                "VIEWS",
+                "PREVIEW_TEXT"
+            ];
+            $queryBlogPosts = CBlogPost::GetList($blogPostOrder, $blogPostFilter, false, false, $blogPostSelect);
+            while ($getBlogPost = $queryBlogPosts->fetch()) {
+                $querySocNetPermissions = CBlogPost::GetSocNetPostPerms($getBlogPost["ID"], false, $this->arParams["USERS"]);
                 if (trim($querySocNetPermissions) != "D") {
-                    $blogPost["TITLE"] = trim($blogPost["TITLE"]) == "" ? "Без названия" . " [" . $blogPost["ID"] . "]" : trim($blogPost["TITLE"]);
-                    $blogPost["PREVIEW_TEXT"] = trim($blogPost["PREVIEW_TEXT"]) == "" ? "" : $blogPost["PREVIEW_TEXT"];
-                    $queryComments = CBlogComment::GetList(
-                        ["ID" => "DESC"],
-                        ["BLOG_ID" => $blogID, "POST_ID" => $blogPost["ID"]], false, false,
-                        ["ID", "AUTHOR_ID", "POST_TEXT"]
-                    );
-                    while ($comment = $queryComments->fetch()) {
-                        if (trim($comment["AUTHOR_ID"]) != "") {
-                            $queryUser = CUser::GetByID($comment["AUTHOR_ID"])->fetch();
-                            if ($queryUser) {
-                                $topCommentators[$comment["AUTHOR_ID"]]["AUTHOR_ID"] = $blogPost["AUTHOR_ID"];
-                                $topCommentators[$comment["AUTHOR_ID"]]["USER"] = $queryUser["LAST_NAME"] . " " . $queryUser["NAME"]; //Комментатор постов
-                                $topCommentators[$comment["AUTHOR_ID"]]["COUNT"] = //Подсчитываем сколько всего постов откомментировал пользователь
-                                    isset($topCommentators[$comment["AUTHOR_ID"]]["COUNT"]) ?
-                                        $topCommentators[$comment["AUTHOR_ID"]]["COUNT"] += 1 : 1;
-                                $topCommentators[$blogPost["ID"]][$comment["AUTHOR_ID"]] = //Подсчитываем сколько раз пользователь откомментировал каждый пост
-                                    isset($topCommentators[$blogPost["ID"]][$comment["AUTHOR_ID"]]) ?
-                                        $topCommentators[$blogPost["ID"]][$comment["AUTHOR_ID"]] += 1 : 1;
-                                $topCommentators[$comment["AUTHOR_ID"]]["POSTS"][$comment["AUTHOR_ID"] . $blogPost["ID"]]["POST_ID"] = $blogPost["ID"];
-                                $topCommentators[$comment["AUTHOR_ID"]]["POSTS"][$comment["AUTHOR_ID"] . $blogPost["ID"]]["POST_NAME"] = $blogPost["TITLE"]; //Название поста + кол-во комментариев пользователя
-                                $topCommentators[$comment["AUTHOR_ID"]]["POSTS"][$comment["AUTHOR_ID"] . $blogPost["ID"]]["USER_POST_COMMENTS"][$comment["ID"]] = $parser->convertText($comment["POST_TEXT"]); //Конвертируем BB code текста комментария
-                                //Удаляем изображения
-                                preg_match_all('#\[DISK FILE ID=(.*?)\]#', $comment["POST_TEXT"], $commentImages);
-                                foreach ($commentImages[0] as $commentImageKey => $commentImageValue) {
-                                    if (trim($commentImageValue) != "") $topCommentators[$comment["AUTHOR_ID"]]["POSTS"][$comment["AUTHOR_ID"] . $blogPost["ID"]]["USER_POST_COMMENTS"][$comment["ID"]] = str_ireplace($commentImageValue, "", $topCommentators[$comment["AUTHOR_ID"]]["POSTS"][$blogPost["ID"]]["USER_POST_COMMENTS"][$comment["ID"]]);
-                                }
-                            }
-                        }
-                    }
-                    $topComments[$blogPost["ID"]]["NAME"] = $blogPost["TITLE"];
-                    $topComments[$blogPost["ID"]]["TOTAL_COMMENTS"] = $blogPost["NUM_COMMENTS"];
-
-                    $topViews[$blogPost["ID"]]["NAME"] = $blogPost["TITLE"];
-                    $topViews[$blogPost["ID"]]["TOTAL_VIEWS"] = $blogPost["VIEWS"];
-
-                    $queryVotes = CRatings::GetRatingVoteResult("BLOG_POST", $blogPost["ID"]);
-                    $topVotes[$blogPost["ID"]]["NAME"] = $blogPost["TITLE"];
-                    if (intval($queryVotes["TOTAL_VOTES"]) > 0) {
-                        $topVotes[$blogPost["ID"]]["TOTAL_VOTES"] = $queryVotes["TOTAL_VOTES"];
-                        foreach ($queryVotes["USER_VOTE_LIST"] as $userVoteID => $userVoteValue) {
-                            $queryUser = CUser::GetByID($userVoteID)->fetch();
-                            if ($queryUser) {
-                                $topVotes[$blogPost["ID"]]["USERS"][$queryUser["ID"]] = $queryUser["LAST_NAME"] . " " . $queryUser["NAME"];
-                            }
-                        }
-                    } else {
-                        $topVotes[$blogPost["ID"]]["TOTAL_VOTES"] = "0";
-                    }
-                    $blogPosts[] = $blogPost;
-
-                    $yearCreate = date("Y", strtotime($blogPost["DATE_CREATE"]));
-                    $monthCreate = date("m", strtotime($blogPost["DATE_CREATE"]));
-                    $publishStatistics[$yearCreate][$monthCreate][$blogPost["ID"]] = $blogPost["DATE_CREATE"];
+                    $arBlogPost[$getBlogPost["ID"]] = $getBlogPost;
                 }
+            }
+            foreach ($arBlogPost as $blogPostID => $blogPost) {
+                $blogPost["TITLE"] = trim($blogPost["TITLE"]) == "" ? "Без названия" . " [" . $blogPost["ID"] . "]" : trim($blogPost["TITLE"]);
+                $blogPost["PREVIEW_TEXT"] = trim($blogPost["PREVIEW_TEXT"]) == "" ? "" : $blogPost["PREVIEW_TEXT"];
+                $queryComments = CBlogComment::GetList(
+                    ["ID" => "DESC"],
+                    ["BLOG_ID" => $blogID, "POST_ID" => $blogPost["ID"]], false, false,
+                    ["ID", "AUTHOR_ID", "POST_TEXT"]
+                );
+                while ($comment = $queryComments->fetch()) {
+                    if (trim($comment["AUTHOR_ID"]) != "") {
+                        $queryUser = CUser::GetByID($comment["AUTHOR_ID"])->fetch();
+                        if ($queryUser) {
+                            $topCommentators[$comment["AUTHOR_ID"]]["AUTHOR_ID"] = $blogPost["AUTHOR_ID"];
+                            $topCommentators[$comment["AUTHOR_ID"]]["USER"] = $queryUser["LAST_NAME"] . " " . $queryUser["NAME"]; //Комментатор постов
+                            $topCommentators[$comment["AUTHOR_ID"]]["COUNT"] = //Подсчитываем сколько всего постов откомментировал пользователь
+                                isset($topCommentators[$comment["AUTHOR_ID"]]["COUNT"]) ?
+                                    $topCommentators[$comment["AUTHOR_ID"]]["COUNT"] += 1 : 1;
+                            $topCommentators[$blogPost["ID"]][$comment["AUTHOR_ID"]] = //Подсчитываем сколько раз пользователь откомментировал каждый пост
+                                isset($topCommentators[$blogPost["ID"]][$comment["AUTHOR_ID"]]) ?
+                                    $topCommentators[$blogPost["ID"]][$comment["AUTHOR_ID"]] += 1 : 1;
+                            $topCommentators[$comment["AUTHOR_ID"]]["POSTS"][$comment["AUTHOR_ID"] . $blogPost["ID"]]["POST_ID"] = $blogPost["ID"];
+                            $topCommentators[$comment["AUTHOR_ID"]]["POSTS"][$comment["AUTHOR_ID"] . $blogPost["ID"]]["POST_NAME"] = $blogPost["TITLE"]; //Название поста + кол-во комментариев пользователя
+                            $topCommentators[$comment["AUTHOR_ID"]]["POSTS"][$comment["AUTHOR_ID"] . $blogPost["ID"]]["USER_POST_COMMENTS"][$comment["ID"]] = $parser->convertText($comment["POST_TEXT"]); //Конвертируем BB code текста комментария
+                            //Удаляем изображения
+                            preg_match_all('#\[DISK FILE ID=(.*?)\]#', $comment["POST_TEXT"], $commentImages);
+                            foreach ($commentImages[0] as $commentImageKey => $commentImageValue) {
+                                if (trim($commentImageValue) != "") $topCommentators[$comment["AUTHOR_ID"]]["POSTS"][$comment["AUTHOR_ID"] . $blogPost["ID"]]["USER_POST_COMMENTS"][$comment["ID"]] = str_ireplace($commentImageValue, "", $topCommentators[$comment["AUTHOR_ID"]]["POSTS"][$blogPost["ID"]]["USER_POST_COMMENTS"][$comment["ID"]]);
+                            }
+                        }
+                    }
+                }
+                $topComments[$blogPost["ID"]]["NAME"] = $blogPost["TITLE"];
+                $topComments[$blogPost["ID"]]["TOTAL_COMMENTS"] = $blogPost["NUM_COMMENTS"];
+
+                $topViews[$blogPost["ID"]]["NAME"] = $blogPost["TITLE"];
+                $topViews[$blogPost["ID"]]["TOTAL_VIEWS"] = $blogPost["VIEWS"];
+
+                $queryVotes = CRatings::GetRatingVoteResult("BLOG_POST", $blogPost["ID"]);
+                $topVotes[$blogPost["ID"]]["NAME"] = $blogPost["TITLE"];
+                if (intval($queryVotes["TOTAL_VOTES"]) > 0) {
+                    $topVotes[$blogPost["ID"]]["TOTAL_VOTES"] = $queryVotes["TOTAL_VOTES"];
+                    foreach ($queryVotes["USER_VOTE_LIST"] as $userVoteID => $userVoteValue) {
+                        $queryUser = CUser::GetByID($userVoteID)->fetch();
+                        if ($queryUser) {
+                            $topVotes[$blogPost["ID"]]["USERS"][$queryUser["ID"]] = $queryUser["LAST_NAME"] . " " . $queryUser["NAME"];
+                        }
+                    }
+                } else {
+                    $topVotes[$blogPost["ID"]]["TOTAL_VOTES"] = "0";
+                }
+                $blogPosts[] = $blogPost;
+
+                $yearCreate = date("Y", strtotime($blogPost["DATE_CREATE"]));
+                $monthCreate = date("m", strtotime($blogPost["DATE_CREATE"]));
+                $publishStatistics[$yearCreate][$monthCreate][$blogPost["ID"]] = $blogPost["DATE_CREATE"];
             }
 
             $result["POSTS"] = $blogPosts;
@@ -237,13 +249,11 @@ class CompanyNewsStatistics extends CBitrixComponent
             if (count($topCommentators) > 0) {
                 $result["TOP_COMMENTATORS"] = $topCommentators;
             }
-        } else {
-            $result = [];
-            $result["ERRORS"] = ["ERROR_MESSAGE" => "Посты не найдены"];
-        }
-        if (count($result["POSTS"]) < 1) {
-            $result = [];
-            $result["ERRORS"] = ["ERROR_MESSAGE" => "Посты не найдены"];
+            if (count($result["POSTS"]) < 1) {
+                $result = [];
+                $result["ERRORS"] = ["ERROR_MESSAGE" => "Посты не найдены"];
+            }
+            $cache->endDataCache(["RESULT" => $result]);
         }
 
         return $result;

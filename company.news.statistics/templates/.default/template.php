@@ -17,39 +17,40 @@ Asset::getInstance()->addJs("https://cdn.amcharts.com/lib/4/core.js");
 Asset::getInstance()->addJs("https://cdn.amcharts.com/lib/4/charts.js");
 Asset::getInstance()->addJs("https://cdn.amcharts.com/lib/4/themes/animated.js");
 ?>
+
 <div id="news-statistics-wrapper" class="news-statistics-wrapper">
     <div id="news-statistics-title" class="news-statistics-title"><?=Loc::getMessage("MAIN_TITLE");?></div>
     <div class="news-statistics-content">
         <div class="news-statistics-tags-wrapper">
             <div class="news-statistics-aside-title"><?=Loc::getMessage("CONTROL_TAGS_TITLE");?></div>
             <?php if (count($arResult["TAGS"]) > 0): ?>
-            <ul class="news-statistics-tags">
-                <?php foreach ($arResult["TAGS"] as $tagID => $tagValue): ?>
-                <li id="news-statistics-tag-li-<?=$tagValue["ID"];?>" class="news-statistics-tag-li">
-                    <div class="news-statistics-tag">
-                        <span class="news-statistics-tag-title"><?=$tagValue["NAME"]?></span>
-                        <span class="news-statistics-tag-delete" data-tag-id="<?=$tagValue["ID"];?>" data-tag-name="<?=$tagValue["NAME"];?>"><?=Loc::getMessage("DELETE_TAG_TITLE");?></span>
-                    </div>
-                    <div class="news-statistics-tag-info">
-                        <span class="news-statistics-tag-info-count"><?=Loc::getMessage("USE_IN");?> <?=$tagValue["TAG_COUNT"];?> <?=Loc::getMessage("POST");?><?=$tagValue["TAG_COUNT"] == 1 ? Loc::getMessage("POST_END_1") : Loc::getMessage("POST_END_2");?></span>
-                        <?php if ($tagValue["TAG_COUNT"] > 0): ?>
-                        <span class="news-statistics-tag-info-posts" data-tag-id="<?=$tagValue["ID"];?>"><?=Loc::getMessage("POST_LIST");?></span>
-                        <?php endif; ?>
-                    </div>
-                    <div id="news-statistics-tag-delete-success-<?=$tagValue["ID"];?>" class="news-statistics-tag-delete-success"><?=Loc::getMessage("POST_DELETED");?></div>
-                    <div id="news-statistics-tag-delete-error-<?=$tagValue["ID"];?>" class="news-statistics-tag-delete-error"><?=Loc::getMessage("POST_DELETED_ERROR");?></div>
-                    <div id="news-statistics-posts-wrapper-<?=$tagValue["ID"];?>" class="news-statistics-posts-wrapper">
-                        <ul>
-                        <?php foreach ($tagValue["POSTS"] as $postID => $postName): ?>
-                        <li><a href="/company/personal/user/<?=$arResult["CURRENT_USER"]["ID"];?>/blog/<?=$postID?>/"><?=$postName;?></a></li>
-                        <?php endforeach; ?>
-                        </ul>
-                    </div>
-                </li>
-                <?php endforeach; ?>
-            </ul>
+                <ul class="news-statistics-tags">
+                    <?php foreach ($arResult["TAGS"] as $tagID => $tagValue): ?>
+                    <li id="news-statistics-tag-li-<?=$tagValue["ID"];?>" class="news-statistics-tag-li">
+                        <div class="news-statistics-tag">
+                            <span class="news-statistics-tag-title"><?=$tagValue["NAME"]?></span>
+                            <span class="news-statistics-tag-delete" data-tag-id="<?=$tagValue["ID"];?>" data-tag-name="<?=$tagValue["NAME"];?>"><?=Loc::getMessage("DELETE_TAG_TITLE");?></span>
+                        </div>
+                        <div class="news-statistics-tag-info">
+                            <span class="news-statistics-tag-info-count"><?=Loc::getMessage("USE_IN");?> <?=$tagValue["TAG_COUNT"];?> <?=Loc::getMessage("POST");?><?=$tagValue["TAG_COUNT"] == 1 ? Loc::getMessage("POST_END_1") : Loc::getMessage("POST_END_2");?></span>
+                            <?php if ($tagValue["TAG_COUNT"] > 0): ?>
+                            <span class="news-statistics-tag-info-posts" data-tag-id="<?=$tagValue["ID"];?>"><?=Loc::getMessage("POST_LIST");?></span>
+                            <?php endif; ?>
+                        </div>
+                        <div id="news-statistics-tag-delete-success-<?=$tagValue["ID"];?>" class="news-statistics-tag-delete-success"><?=Loc::getMessage("POST_DELETED");?></div>
+                        <div id="news-statistics-tag-delete-error-<?=$tagValue["ID"];?>" class="news-statistics-tag-delete-error"><?=Loc::getMessage("POST_DELETED_ERROR");?></div>
+                        <div id="news-statistics-posts-wrapper-<?=$tagValue["ID"];?>" class="news-statistics-posts-wrapper">
+                            <ul>
+                            <?php foreach ($tagValue["POSTS"] as $postID => $postName): ?>
+                            <li><a href="/company/personal/user/<?=$arResult["CURRENT_USER"]["ID"];?>/blog/<?=$postID?>/"><?=$postName;?></a></li>
+                            <?php endforeach; ?>
+                            </ul>
+                        </div>
+                    </li>
+                    <?php endforeach; ?>
+                </ul>
             <?php else: ?>
-            <div class="tags-not-found"><?=Loc::getMessage("TAGS_NOT_FOUND");?></div>
+                <div class="tags-not-found"><?=Loc::getMessage("TAGS_NOT_FOUND");?></div>
             <?php endif; ?>
         </div>
         <div class="news-statistics-info-content">

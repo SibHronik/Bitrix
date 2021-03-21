@@ -60,8 +60,8 @@ BX.ready(() => {
                             for (let searchUserResultuserID in searchUserResultList) {
                                 if (searchUserResultList.hasOwnProperty(searchUserResultuserID)) objectLength++;
                             }
+                            searchUserResults.innerHTML = '';
                             if (objectLength > 0) {
-                                searchUserResults.innerHTML = '';
                                 for (let searchUserResultuserID in searchUserResultList) {
                                     let searchResultLIWrapper = document.createElement('li');
                                     searchResultLIWrapper.classList.add('search-result-li-wrapper');

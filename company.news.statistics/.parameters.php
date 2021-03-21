@@ -12,7 +12,6 @@ $cache = Bitrix\Main\Data\Cache::createInstance();
 if ($cache->initCache($cacheTime, $cacheId, $cacheDir)) {
     $users = $cache->getVars();
     $users = $users["USERS"];
-    $arParams["USERS_LIST"] = $users;
 }
 
 if (!isset($users) || count($users) < 1 || empty($users)) {
@@ -26,7 +25,6 @@ if (!isset($users) || count($users) < 1 || empty($users)) {
             $users[$user["ID"]] = $user["LAST_NAME"] . " " . $user["NAME"] . " [" . $user["LOGIN"] . "]";
         }
         asort($users);
-        $arParams["USERS_LIST"] = $users;
         $cache->endDataCache(["USERS" => $users]);
     }
 }
