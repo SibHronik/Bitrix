@@ -194,14 +194,14 @@ class CompanyNewsStatistics extends CBitrixComponent
 
             function sortTags ($b, $a)
             {
-                return gmp_cmp(intVal($a["TAG_COUNT"]), intVal($b["TAG_COUNT"]));
+                return intVal(intVal($a["TAG_COUNT"]) > intVal($b["TAG_COUNT"]));
             }
             uasort($tags, "sortTags");
             $result["TAGS"] = $tags;
 
             function sortTopComments ($b, $a) //кол-во комментариев у поста
             {
-                return gmp_cmp(intVal($a["TOTAL_COMMENTS"]), intVal($b["TOTAL_COMMENTS"]));
+                return intVal(intVal($a["TOTAL_COMMENTS"]) > intVal($b["TOTAL_COMMENTS"]));
             }
             uasort($topComments, "sortTopComments");
             if (count($topComments) > 10) {
@@ -213,7 +213,7 @@ class CompanyNewsStatistics extends CBitrixComponent
 
             function sortVotes ($b, $a) //кол-во лайков у поста
             {
-                return gmp_cmp(intVal($a["TOTAL_VOTES"]), intVal($b["TOTAL_VOTES"]));
+                return intVal(intVal($a["TOTAL_VOTES"]) > intVal($b["TOTAL_VOTES"]));
             }
             uasort($topVotes, "sortVotes");
             foreach ($topVotes as $postID => &$postValue) {
@@ -228,7 +228,7 @@ class CompanyNewsStatistics extends CBitrixComponent
 
             function sortViews ($b, $a) //Кол-во просмотров
             {
-                return gmp_cmp(intVal($a["TOTAL_VIEWS"]), intVal($b["TOTAL_VIEWS"]));
+                return intVal(intVal($a["TOTAL_VIEWS"]) > intVal($b["TOTAL_VIEWS"]));
             }
             uasort($topViews, "sortViews");
             if (count($topViews) > 10) {
@@ -240,7 +240,7 @@ class CompanyNewsStatistics extends CBitrixComponent
 
             function sortTopCommentators ($b, $a) //Топ комментаторов
             {
-                return gmp_cmp(intVal($a["COUNT"]), intVal($b["COUNT"]));
+                return intVal(intVal($a["COUNT"]) > intVal($b["COUNT"]));
             }
             uasort($topCommentators, "sortTopCommentators");
             if (count($topCommentators) > 10) {
