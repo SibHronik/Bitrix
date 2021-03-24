@@ -13,7 +13,7 @@ $APPLICATION->SetTitle("Тестовая страница");
 ?>
 <div id="news-statistics-ajax-wrapper">
 <?php $APPLICATION->IncludeComponent(
-    "uradugi:company.news.statistics",
+    "local:company.news.statistics",
     ".default",
     [
         "COMPONENT_TEMPLATE" => ".default",
