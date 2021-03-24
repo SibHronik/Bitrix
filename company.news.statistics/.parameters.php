@@ -6,8 +6,8 @@ use \Bitrix\Main\Localization\Loc;
 Loc::loadMessages(__FILE__);
 
 $cacheTime = 86400;
-$cacheId = "CompanyNewsStatisticsID";
-$cacheDir = "CompanyNewsStatistics";
+$cacheId = "statisticsID";
+$cacheDir = "statistics";
 $cache = Bitrix\Main\Data\Cache::createInstance();
 if ($cache->initCache($cacheTime, $cacheId, $cacheDir)) {
     $users = $cache->getVars();
