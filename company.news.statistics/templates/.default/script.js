@@ -365,8 +365,12 @@ BX.ready(() => {
     document.getElementById('news-statistics-ajax-wrapper').addEventListener('input', event => {
         if (event.target.className == 'news-statistics-set-title') {
             let postID = event.target.getAttribute('data-post-id');
+            let fieldLength = event.target.getAttribute('data-length');
+            let fieldCurrentLength = event.target.value.length;
             if (event.target.value != '') {
                 document.getElementById('news-statistics-save-post-data-' + postID).classList.remove('news-statistics-save-post-data-disabled');
+                if (event.target.value.length > fieldLength) document.getElementById('set-title-sq-passed-' + postID).classList.add('set-title-sq-danger');
+                else document.getElementById('set-title-sq-passed-' + postID).classList.remove('set-title-sq-danger');
             } else {
                 let postPreviewTextValue = document.getElementById('news-statistics-set-preview-text-area-' + postID).value;
                 if (postPreviewTextValue == '') {
@@ -374,7 +378,9 @@ BX.ready(() => {
                 } else {
                     document.getElementById('news-statistics-save-post-data-' + postID).classList.remove('news-statistics-save-post-data-disabled');
                 }
+                document.getElementById('set-title-sq-passed-' + postID).classList.add('set-title-sq-danger');
             }
+            document.getElementById('set-title-sq-passed-' + postID).innerText = fieldCurrentLength;
         }
     });
 
@@ -382,8 +388,12 @@ BX.ready(() => {
     document.getElementById('news-statistics-ajax-wrapper').addEventListener('input', event => {
         if (event.target.className == 'news-statistics-set-preview-text-area') {
             let postID = event.target.getAttribute('data-post-id');
+            let fieldLength = event.target.getAttribute('data-length');
+            let fieldCurrentLength = event.target.value.length;
             if (event.target.value != '') {
                 document.getElementById('news-statistics-save-post-data-' + postID).classList.remove('news-statistics-save-post-data-disabled');
+                if (event.target.value.length > fieldLength) document.getElementById('set-preview-text-sq-passed-' + postID).classList.add('set-preview-text-sq-danger');
+                else document.getElementById('set-preview-text-sq-passed-' + postID).classList.remove('set-preview-text-sq-danger');
             } else {
                 let postTitleValue = document.getElementById('news-statistics-set-title-' + postID).value;
                 if (postTitleValue == '') {
@@ -391,7 +401,9 @@ BX.ready(() => {
                 } else {
                     document.getElementById('news-statistics-save-post-data-' + postID).classList.remove('news-statistics-save-post-data-disabled');
                 }
+                document.getElementById('set-preview-text-sq-passed-' + postID).classList.add('set-preview-text-sq-danger');
             }
+            document.getElementById('set-preview-text-sq-passed-' + postID).innerText = fieldCurrentLength;
         }
     });
 

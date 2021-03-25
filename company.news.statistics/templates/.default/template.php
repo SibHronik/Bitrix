@@ -174,18 +174,42 @@ Asset::getInstance()->addJs("https://cdn.amcharts.com/lib/4/themes/animated.js")
 
                                         <div
                                             id="news-statistics-set-post-data-wrapper-<?=$postData["ID"];?>"
-                                            class="news-statistics-set-post-data-wrapper">
-                                            <input type="text" data-post-id="<?=$postData["ID"];?>"
-                                               id="news-statistics-set-title-<?=$postData["ID"];?>"
+                                            class="news-statistics-set-post-data-wrapper"
+                                        >
+                                            <input type="text" id="news-statistics-set-title-<?=$postData["ID"];?>"
                                                class="news-statistics-set-title"
                                                placeholder="Введите заголовок"
+                                               data-post-id="<?=$postData["ID"];?>"
+                                               data-length="95"
                                                value="<?=$postData["TITLE"];?>"
                                             />
+                                            <div class="news-statistics-set-title-symbols-quantity-wrapper">
+                                                Рекомендуемое количество символов:
+                                                <span class="news-statistics-set-title-symbols-quantity">95</span>.
+                                                Введено символов:
+                                                <!--sq-symbols-quantity-->
+                                                <span
+                                                    id="set-title-sq-passed-<?=$postData['ID'];?>"
+                                                    class="set-title-sq-passed<?=intVal(mb_strlen($postData['TITLE'])) > intVal(95) ? " set-title-sq-danger" : ""; ?>"
+                                                ><?=mb_strlen($postData["TITLE"]);?></span>
+                                            </div>
                                             <textarea data-post-id="<?=$postData["ID"];?>"
                                                   id="news-statistics-set-preview-text-area-<?=$postData["ID"];?>"
                                                   class="news-statistics-set-preview-text-area"
+                                                  data-length="125"
                                                   value="<?=$postData["PREVIEW_TEXT"];?>"
                                             ><?=$postData["PREVIEW_TEXT"];?></textarea>
+                                            <div class="news-statistics-set-preview-text-symbols-quantity-wrapper">
+                                                Рекомендуемое количество символов:
+                                                <span class="news-statistics-set-preview-text-symbols-quantity">125</span>
+                                                Введено символов:
+                                                <!--sq-symbols-quantity-->
+                                                <span
+                                                    id="set-preview-text-sq-passed-<?=$postData['ID'];?>"
+                                                    class="set-preview-text-sq-passed<?=intVal(mb_strlen($postData['PREVIEW_TEXT'])) > intVal(125) ? " set-preview-text-sq-danger" : ""; ?>">
+                                                    <?=mb_strlen($postData["PREVIEW_TEXT"]);?>
+                                                </span>
+                                            </div>
                                             <div class="news-statistics-save-post-data-buttons-wrapper">
                                                 <div
                                                     data-post-id="<?=$postData["ID"];?>"

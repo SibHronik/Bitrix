@@ -757,9 +757,30 @@
     padding: 5px 10px;
     border: 1px solid #2067B0;
     border-radius: 3px;
-    resize: none;
     outline: none;
     box-shadow: none;
+    font-size: 14px;
+}
+
+.news-statistics-set-title-symbols-quantity-wrapper{
+    box-sizing: border-box;
+    width: 100%;
+    height: auto;
+    margin: 0 auto 15px;
+    padding: 0;
+    font-size: 13px;
+}
+
+.news-statistics-set-title-symbols-quantity{
+    color: #2067B0;
+}
+
+.set-title-sq-passed{
+    color: #2067B0;
+}
+
+.set-title-sq-danger{
+    color: #bb0000;
 }
 
 .news-statistics-set-preview-text-area{
@@ -778,6 +799,28 @@
     resize: none;
     outline: none;
     box-shadow: none;
+    font-size: 14px;
+}
+
+.news-statistics-set-preview-text-symbols-quantity-wrapper{
+    box-sizing: border-box;
+    width: 100%;
+    height: auto;
+    margin: 0 auto 15px;
+    padding: 0;
+    font-size: 13px;
+}
+
+.news-statistics-set-preview-text-symbols-quantity{
+    color: #2067B0;
+}
+
+.set-preview-text-sq-passed{
+    color: #2067B0;
+}
+
+.set-preview-text-sq-danger{
+    color: #bb0000;
 }
 
 .news-statistics-save-post-data-buttons-wrapper{
