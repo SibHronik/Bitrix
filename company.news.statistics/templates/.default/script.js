@@ -351,54 +351,78 @@ BX.ready(() => {
 
     //Открытие/закрытие правки постов
     document.getElementById('news-statistics-ajax-wrapper').addEventListener('click', event => {
-        if (event.target.className == 'set-post-preview-text-dropdown-button') {
-            let setPostTextWrappers = document.getElementsByClassName('news-statistics-set-preview-text-area-wrapper');
+        if (event.target.className == 'set-post-data-dropdown-button') {
+            let setPostTextWrappers = document.getElementsByClassName('news-statistics-set-post-data-wrapper');
             for (let i = 0; i < setPostTextWrappers.length; i++) {
                 setPostTextWrappers[i].style.display = 'none';
             }
             let postID = event.target.getAttribute('data-post-id');
-            document.getElementById('news-statistics-set-preview-text-area-wrapper-' + postID).style.display = 'block';
+            document.getElementById('news-statistics-set-post-data-wrapper-' + postID).style.display = 'block';
         }
     });
 
+    //Заполнение заголовка поста
     document.getElementById('news-statistics-ajax-wrapper').addEventListener('input', event => {
-        if (event.target.className == 'news-statistics-set-preview-text-area') {
+        if (event.target.className == 'news-statistics-set-title') {
             let postID = event.target.getAttribute('data-post-id');
             if (event.target.value != '') {
-                document.getElementById('news-statistics-save-preview-text-' + postID).classList.remove('news-statistics-save-preview-text-disabled');
+                document.getElementById('news-statistics-save-post-data-' + postID).classList.remove('news-statistics-save-post-data-disabled');
             } else {
-                document.getElementById('news-statistics-save-preview-text-' + postID).classList.add('news-statistics-save-preview-text-disabled');
+                let postPreviewTextValue = document.getElementById('news-statistics-set-preview-text-area-' + postID).value;
+                if (postPreviewTextValue == '') {
+                    document.getElementById('news-statistics-save-post-data-' + postID).classList.add('news-statistics-save-post-data-disabled');
+                } else {
+                    document.getElementById('news-statistics-save-post-data-' + postID).classList.remove('news-statistics-save-post-data-disabled');
+                }
             }
         }
     });
 
-    //
-    document.getElementById('news-statistics-ajax-wrapper').addEventListener('click', event => {
-        if (event.target.className == 'news-statistics-save-preview-text') {
+    //Заполнение анонса поста
+    document.getElementById('news-statistics-ajax-wrapper').addEventListener('input', event => {
+        if (event.target.className == 'news-statistics-set-preview-text-area') {
             let postID = event.target.getAttribute('data-post-id');
+            if (event.target.value != '') {
+                document.getElementById('news-statistics-save-post-data-' + postID).classList.remove('news-statistics-save-post-data-disabled');
+            } else {
+                let postTitleValue = document.getElementById('news-statistics-set-title-' + postID).value;
+                if (postTitleValue == '') {
+                    document.getElementById('news-statistics-save-post-data-' + postID).classList.add('news-statistics-save-post-data-disabled');
+                } else {
+                    document.getElementById('news-statistics-save-post-data-' + postID).classList.remove('news-statistics-save-post-data-disabled');
+                }
+            }
+        }
+    });
+
+    //Установка заголовка и текста анонса
+    document.getElementById('news-statistics-ajax-wrapper').addEventListener('click', event => {
+        if (event.target.className == 'news-statistics-save-post-data') {
+            let postID = event.target.getAttribute('data-post-id');
+            let postTitle = document.getElementById('news-statistics-set-title-' + postID).value;
             let postPreviewText = document.getElementById('news-statistics-set-preview-text-area-' + postID).value;
-            BX.ajax.runComponentAction('uradugi:company.news.statistics', 'UpdatePostPreviewText', {
+            BX.ajax.runComponentAction('uradugi:company.news.statistics', 'UpdatePostData', {
                 mode: 'ajax',
-                data: {POST_ID: postID, POST_PREVIEW_TEXT: postPreviewText}
+                data: {POST_ID: postID, POST_PREVIEW_TEXT: postPreviewText, POST_TITLE: postTitle}
             }).then((response) => {
                 if (response.status == 'success' && response.errors.length < 1) {
-                    let setPostPreviewTextSuccess = document.getElementById('news-statistics-save-preview-text-success-' + postID);
-                    setPostPreviewTextSuccess.style.display = 'block';
+                    let setPostDataSuccess = document.getElementById('news-statistics-save-post-data-success-' + postID);
+                    setPostDataSuccess.style.display = 'block';
                     function hideSuccessUpdatePostPreviewText() {
-                        setPostPreviewTextSuccess.style.display = 'none';
+                        setPostDataSuccess.style.display = 'none';
                     } setTimeout(hideSuccessUpdatePostPreviewText, 2000);
                 } else {
-                    let setPostPreviewTextError = document.getElementById('news-statistics-save-preview-text-error-' + postID);
-                    setPostPreviewTextError.style.display = 'block';
+                    let setPostDataError = document.getElementById('news-statistics-save-post-data-error-' + postID);
+                    setPostDataError.style.display = 'block';
                     function hideErrorUpdatePostPreviewText() {
-                        setPostPreviewTextSuccess.style.display = 'none';
+                        setPostDataError.style.display = 'none';
                     } setTimeout(hideErrorUpdatePostPreviewText, 2000);
                 }
             }, (response) => {
-                let setPostPreviewTextError = document.getElementById('news-statistics-save-preview-text-error-' + postID);
-                setPostPreviewTextError.style.display = 'block';
+                let setPostDataError = document.getElementById('news-statistics-save-post-data-error-' + postID);
+                setPostDataError.style.display = 'block';
                 function hideErrorUpdatePostPreviewText() {
-                    setPostPreviewTextSuccess.style.display = 'none';
+                    setPostDataError.style.display = 'none';
                 } setTimeout(hideErrorUpdatePostPreviewText, 2000);
             });
         }
@@ -406,9 +430,9 @@ BX.ready(() => {
 
     //Пагинация постов
     document.getElementById('news-statistics-ajax-wrapper').addEventListener('click', event => {
-        if (event.target.className == 'news-statistics-set-post-preview-text-pagination-point') {
+        if (event.target.className == 'news-statistics-pagination-point') {
             let postLists = document.getElementsByClassName('news-statistics-set-post-preview-text-list');
-            let paginationLists = document.getElementsByClassName('news-statistics-set-post-preview-text-pagination-point');
+            let paginationLists = document.getElementsByClassName('news-statistics-pagination-point');
             let postListCount = event.target.getAttribute('data-post-list');
             if (parseInt(postListCount) && parseInt(postListCount) > 0) {
                 for (let i = 0; i < postLists.length; i++) {
@@ -417,9 +441,9 @@ BX.ready(() => {
                 document.getElementById('news-statistics-set-post-preview-text-list-' + postListCount).style.display = 'block';
 
                 for (let i = 0; i < paginationLists.length; i++) {
-                    paginationLists[i].classList.remove('news-statistics-set-post-preview-text-pagination-point-active');
+                    paginationLists[i].classList.remove('news-statistics-pagination-point-active');
                 }
-                event.target.classList.add('news-statistics-set-post-preview-text-pagination-point-active');
+                event.target.classList.add('news-statistics-pagination-point-active');
             }
         }
     });

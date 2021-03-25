@@ -20,7 +20,7 @@ class CompanyNewsStatisticsActions extends \Bitrix\Main\Engine\Controller
         return $result;
     }
 
-    public function UpdatePostPreviewTextAction()
+    public function UpdatePostDataAction()
     {
         $result = new \Bitrix\Main\Result;
         \Bitrix\Main\Loader::includeModule("blog");
@@ -30,8 +30,9 @@ class CompanyNewsStatisticsActions extends \Bitrix\Main\Engine\Controller
 
         if ($result -> isSuccess()) {
             $postID = htmlspecialcharsEx(trim($_POST["POST_ID"]));
+            $postTitle = htmlspecialcharsEx(trim($_POST["POST_TITLE"]));
             $postPreviewText = htmlspecialcharsEx(trim($_POST["POST_PREVIEW_TEXT"]));
-            $updatePostID = CBlogPost::Update($postID, ["PREVIEW_TEXT" => $postPreviewText]);
+            $updatePostID = CBlogPost::Update($postID, ["TITLE" => $postTitle, "PREVIEW_TEXT" => $postPreviewText]);
             $result -> setData(["POST_ID" => $updatePostID]);
         }
         return $result;
