@@ -3,18 +3,51 @@
 <?php
 class CompanyNewsStatisticsActions extends \Bitrix\Main\Engine\Controller
 {
+    private function checkErrors($arParams = [], $result)
+    {
+        if (count($arParams) > 0) {
+            $errors = [];
+            foreach ($arParams as $paramKey => $paramValue) {
+                if (!isset($_POST[$paramKey]) && empty($_POST[$paramKey])) {
+                    $errors[] = $paramValue;
+                }
+            }
+            if (count($errors) > 0) {
+                $result->setData(["errors" => $errors]);
+                return $result->getData();
+            }
+        }
+    }
+
+    private function clearCache($userID)
+    {
+        Bitrix\Main\Data\Cache::clearCache(true, "statistics/user/" . $userID);
+    }
+
     public function DeleteTagAction()
     {
-        $result = new \Bitrix\Main\Result;
         \Bitrix\Main\Loader::includeModule("blog");
-        if (!isset($_POST["TAG_ID"]) && empty($_POST["TAG_ID"])) {
-            $result -> addError("TAG ID is empty");
+
+        $result = new \Bitrix\Main\Result;
+
+        $arParams = [
+            "TAG_ID" => "TAG ID is empty",
+            "USER_ID" => "USER ID is empty"
+        ];
+        $errors = $this -> checkErrors($arParams, $result);
+
+        if (count($errors) > 0) {
+            return $result -> getData();
         }
 
         if ($result -> isSuccess()) {
             $tagID = htmlspecialcharsEx(trim($_POST["TAG_ID"]));
             if (!CBlogCategory::Delete($tagID)) {
-                $result -> addError("Error");
+                $result->setData(["errors" => "Не удалось удалить тэг"]);
+                return  $result -> getData();
+            } else {
+                $userID = htmlspecialcharsEx(trim($_POST["USER_ID"]));
+                $this -> clearCache($userID);
             }
         }
         return $result;
@@ -22,13 +55,22 @@ class CompanyNewsStatisticsActions extends \Bitrix\Main\Engine\Controller
 
     public function UpdatePostDataAction()
     {
-        $result = new \Bitrix\Main\Result;
         \Bitrix\Main\Loader::includeModule("blog");
-        if (!isset($_POST["POST_ID"]) && empty($_POST["POST_ID"])) {
-            $result -> addError("POST ID is empty");
+
+        $result = new \Bitrix\Main\Result;
+
+        $arParams = [
+            "POST_ID" => "POST ID is empty",
+            "USER_ID" => "USER ID is empty"
+        ];
+        $errors = $this -> checkErrors($arParams, $result);
+        if (count($errors) > 0) {
+            return $result -> getData();
         }
 
         if ($result -> isSuccess()) {
+            $userID = htmlspecialcharsEx(trim($_POST["USER_ID"]));
+            $this -> clearCache($userID);
             $postID = htmlspecialcharsEx(trim($_POST["POST_ID"]));
             $postTitle = htmlspecialcharsEx(trim($_POST["POST_TITLE"]));
             $postPreviewText = htmlspecialcharsEx(trim($_POST["POST_PREVIEW_TEXT"]));

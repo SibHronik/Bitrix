@@ -80,8 +80,8 @@ class CompanyNewsStatistics extends CBitrixComponent
 
         /*CACHE START*/
         $cacheTime = 3600;
-        $cacheId = "CompanyNewsStatisticsPosts" . $result["CURRENT_USER"]["ID"];
-        $cacheDir = "CompanyNewsStatistics";
+        $cacheId = "statisticsPosts" . $result["CURRENT_USER"]["ID"];
+        $cacheDir = "statistics/user/" . $result["CURRENT_USER"]["ID"];
         $cache = Bitrix\Main\Data\Cache::createInstance();
         if ($cache->initCache($cacheTime, $cacheId, $cacheDir)) {
             $result = $cache->getVars();
@@ -266,8 +266,8 @@ class CompanyNewsStatistics extends CBitrixComponent
         $this -> arResult["RUS_MONTHS"] = self::getRusMonths();
 
         $cacheTime = 86400;
-        $cacheId = "CompanyNewsStatisticsID";
-        $cacheDir = "CompanyNewsStatistics";
+        $cacheId = "statisticsID";
+        $cacheDir = "statistics";
         $cache = Bitrix\Main\Data\Cache::createInstance();
         if ($cache->initCache($cacheTime, $cacheId, $cacheDir)) {
             $users = $cache->getVars();

@@ -114,8 +114,9 @@ BX.ready(() => {
     //}
 
     //Удаление тэга
-    document.getElementById('news-statistics-ajax-wrapper').addEventListener('click', event => {
+    document.getElementById('news-statistics-ajax-wrapper').addEventListener('click', () => {
         if (event.target.className === 'news-statistics-tag-delete') {
+            let userID = event.target.getAttribute('data-user-id');
             let tagID = event.target.getAttribute('data-tag-id');
             let tagName = event.target.getAttribute('data-tag-name');
             if (parseInt(tagID) > 0) {
@@ -149,9 +150,10 @@ BX.ready(() => {
                                 click: () => {
                                     BX.ajax.runComponentAction('uradugi:company.news.statistics', 'DeleteTag', {
                                         mode: 'ajax',
-                                        data: {TAG_ID: tagID}
+                                        data: {USER_ID: userID, TAG_ID: tagID}
                                     }).then((response) => {
-                                        if (response.status == 'success' && response.errors.length < 1) {
+                                        let responseErrorData = response.data.errors === undefined ? 0 : response.data.errors.length;
+                                        if (response.status == 'success' && response.errors.length < 1 && responseErrorData < 1) {
                                             //Показываем всплывашку, что все прошло удачно
                                             let deleteTagSuccess = document.getElementById('news-statistics-tag-delete-success-' + tagID);
                                             deleteTagSuccess.style.display = 'block';
@@ -198,7 +200,7 @@ BX.ready(() => {
 
                         },
                         onPopupClose: () => {
-
+                            onloadWindow.destroy();
                         }
                     }
                 });
@@ -411,13 +413,15 @@ BX.ready(() => {
     document.getElementById('news-statistics-ajax-wrapper').addEventListener('click', event => {
         if (event.target.className == 'news-statistics-save-post-data') {
             let postID = event.target.getAttribute('data-post-id');
+            let userID = event.target.getAttribute('data-user-id');
             let postTitle = document.getElementById('news-statistics-set-title-' + postID).value;
             let postPreviewText = document.getElementById('news-statistics-set-preview-text-area-' + postID).value;
             BX.ajax.runComponentAction('uradugi:company.news.statistics', 'UpdatePostData', {
                 mode: 'ajax',
-                data: {POST_ID: postID, POST_PREVIEW_TEXT: postPreviewText, POST_TITLE: postTitle}
+                data: {POST_ID: postID, USER_ID: userID, POST_PREVIEW_TEXT: postPreviewText, POST_TITLE: postTitle}
             }).then((response) => {
-                if (response.status == 'success' && response.errors.length < 1) {
+                let responseErrorData = response.data.errors === undefined ? 0 : response.data.errors.length;
+                if (response.status == 'success' && response.errors.length < 1 && response.errors.length < 1 && responseErrorData < 1) {
                     let setPostDataSuccess = document.getElementById('news-statistics-save-post-data-success-' + postID);
                     setPostDataSuccess.style.display = 'block';
                     function hideSuccessUpdatePostPreviewText() {
@@ -431,6 +435,7 @@ BX.ready(() => {
                     } setTimeout(hideErrorUpdatePostPreviewText, 2000);
                 }
             }, (response) => {
+                console.log(response);
                 let setPostDataError = document.getElementById('news-statistics-save-post-data-error-' + postID);
                 setPostDataError.style.display = 'block';
                 function hideErrorUpdatePostPreviewText() {

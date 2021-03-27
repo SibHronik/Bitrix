@@ -29,7 +29,12 @@ Asset::getInstance()->addJs("https://cdn.amcharts.com/lib/4/themes/animated.js")
                     <li id="news-statistics-tag-li-<?=$tagValue["ID"];?>" class="news-statistics-tag-li">
                         <div class="news-statistics-tag">
                             <span class="news-statistics-tag-title"><?=$tagValue["NAME"]?></span>
-                            <span class="news-statistics-tag-delete" data-tag-id="<?=$tagValue["ID"];?>" data-tag-name="<?=$tagValue["NAME"];?>"><?=Loc::getMessage("DELETE_TAG_TITLE");?></span>
+                            <span class="news-statistics-tag-delete"
+                                data-user-id="<?=$arResult['CURRENT_USER']['ID'];?>"
+                                data-tag-id="<?=$tagValue["ID"];?>"
+                                data-tag-name="<?=$tagValue["NAME"];?>">
+                                <?=Loc::getMessage("DELETE_TAG_TITLE");?>
+                            </span>
                         </div>
                         <div class="news-statistics-tag-info">
                             <span class="news-statistics-tag-info-count"><?=Loc::getMessage("USE_IN");?> <?=$tagValue["TAG_COUNT"];?> <?=Loc::getMessage("POST");?><?=$tagValue["TAG_COUNT"] == 1 ? Loc::getMessage("POST_END_1") : Loc::getMessage("POST_END_2");?></span>
@@ -213,6 +218,7 @@ Asset::getInstance()->addJs("https://cdn.amcharts.com/lib/4/themes/animated.js")
                                             <div class="news-statistics-save-post-data-buttons-wrapper">
                                                 <div
                                                     data-post-id="<?=$postData["ID"];?>"
+                                                    data-user-id="<?=$arResult['CURRENT_ISER']['ID'];?>"
                                                     id="news-statistics-save-post-data-<?=$postData["ID"];?>"
                                                     class="news-statistics-save-post-data<?=trim($postData["PREVIEW_TEXT"]) == "" ? " news-statistics-save-post-data-disabled" : "";?>"
                                                 >Сохранить</div>
@@ -231,7 +237,7 @@ Asset::getInstance()->addJs("https://cdn.amcharts.com/lib/4/themes/animated.js")
                             </ul>
                         <?php endif; ?>
                     <?php endforeach; ?>
-                    <?php if (trim($arPostPieces) != "" && intVal($arPostPieces) != 0): ?>
+                    <?php if (trim($arPostPieces) != "" && intVal($arPostPieces) > 1): ?>
                         <ul class="news-statistics-pagination-list">
                             <?php for ($i = 1; $i <= intVal($arPostPieces); $i++): ?>
                                 <li
