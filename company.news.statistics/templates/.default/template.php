@@ -215,10 +215,45 @@ Asset::getInstance()->addJs("https://cdn.amcharts.com/lib/4/themes/animated.js")
                                                     <?=mb_strlen($postData["PREVIEW_TEXT"]);?>
                                                 </span>
                                             </div>
+                                            <?php if (count($arResult["TAGS_VALUES"]) > 0): ?>
+                                            <div class="news-statistics-post-tags-wrapper">
+                                                <?php $postTags = []; ?>
+                                                <?php if (trim($postData["CATEGORY_ID"]) != ""): ?>
+                                                <?php $postTags = explode(",", $postData["CATEGORY_ID"]); ?>
+                                                <?php endif; ?>
+                                                <?php if (count($postTags) > 0): ?>
+                                                <div id="news-statistics-post-tags-title-<?=$postData['ID'];?>"
+                                                     class="news-statistics-post-tags-title">Тэги: </div>
+                                                <ul id="news-statistics-post-tags-list-wrapper-<?=$postData['ID'];?>"
+                                                    class="news-statistics-post-tags-list-wrapper">
+                                                    <?php foreach ($postTags as $postTag): ?>
+                                                    <?php if (in_array($postTag, array_keys($arResult["TAGS_VALUES"]))): ?>
+                                                    <li class="news-statistics-post-tag"
+                                                        data-tag-id="<?=$postTag;?>"
+                                                        data-post-id="<?=$postData['ID'];?>"><?=$arResult["TAGS_VALUES"][$postTag];?></li>
+                                                    <?php endif; ?>
+                                                    <?php endforeach; ?>
+                                                </ul>
+                                                <?php else: ?>
+                                                    <div class="news-statistics-post-tags-title">Тэги отсутствуют</div>
+                                                <?php endif; ?>
+                                            </div>
+                                            <div class="news-statistics-exist-post-tags-wrapper">
+                                                <div class="news-statistics-exist-post-tags-title">Доступные тэги: </div>
+                                                <ul id="news-statistics-exist-post-tags-list-wrapper-<?=$postData['ID'];?>"
+                                                    class="news-statistics-exist-post-tags-list-wrapper">
+                                                <?php foreach ($arResult["TAGS_VALUES"] as $postExistTagKey => $postExitstTagValue): ?>
+                                                    <li class="news-statistics-exist-post-tag<?=in_array($postExistTagKey, $postTags) ? ' news-statistics-exist-post-tag-active' : '';?>"
+                                                        data-tag-id="<?=$postExistTagKey;?>"
+                                                        data-post-id="<?=$postData['ID'];?>"><?=$postExitstTagValue;?></li>
+                                                <?php endforeach; ?>
+                                                </ul>
+                                            </div>
+                                            <?php endif; ?>
                                             <div class="news-statistics-save-post-data-buttons-wrapper">
                                                 <div
                                                     data-post-id="<?=$postData["ID"];?>"
-                                                    data-user-id="<?=$arResult['CURRENT_ISER']['ID'];?>"
+                                                    data-user-id="<?=$arResult['CURRENT_USER']['ID'];?>"
                                                     id="news-statistics-save-post-data-<?=$postData["ID"];?>"
                                                     class="news-statistics-save-post-data<?=trim($postData["PREVIEW_TEXT"]) == "" ? " news-statistics-save-post-data-disabled" : "";?>"
                                                 >Сохранить</div>

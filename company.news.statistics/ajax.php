@@ -32,7 +32,7 @@ class CompanyNewsStatisticsActions extends \Bitrix\Main\Engine\Controller
 
         $arParams = [
             "TAG_ID" => "TAG ID is empty",
-            "USER_ID" => "USER ID is empty"
+            "CURRENT_USER_ID" => "USER ID is empty"
         ];
         $errors = $this -> checkErrors($arParams, $result);
 
@@ -46,7 +46,7 @@ class CompanyNewsStatisticsActions extends \Bitrix\Main\Engine\Controller
                 $result->setData(["errors" => "Не удалось удалить тэг"]);
                 return  $result -> getData();
             } else {
-                $userID = htmlspecialcharsEx(trim($_POST["USER_ID"]));
+                $userID = htmlspecialcharsEx(trim($_POST["CURRENT_USER_ID"]));
                 $this -> clearCache($userID);
             }
         }
@@ -60,8 +60,8 @@ class CompanyNewsStatisticsActions extends \Bitrix\Main\Engine\Controller
         $result = new \Bitrix\Main\Result;
 
         $arParams = [
-            "POST_ID" => "POST ID is empty",
-            "USER_ID" => "USER ID is empty"
+            "ID" => "POST ID is empty",
+            "CURRENT_USER_ID" => "USER ID is empty"
         ];
         $errors = $this -> checkErrors($arParams, $result);
         if (count($errors) > 0) {
@@ -69,14 +69,19 @@ class CompanyNewsStatisticsActions extends \Bitrix\Main\Engine\Controller
         }
 
         if ($result -> isSuccess()) {
-            $userID = htmlspecialcharsEx(trim($_POST["USER_ID"]));
+            $userID = htmlspecialcharsEx(trim($_POST["CURRENT_USER_ID"]));
             $this -> clearCache($userID);
-            $postID = htmlspecialcharsEx(trim($_POST["POST_ID"]));
-            $postTitle = htmlspecialcharsEx(trim($_POST["POST_TITLE"]));
-            $postPreviewText = htmlspecialcharsEx(trim($_POST["POST_PREVIEW_TEXT"]));
-            $updatePostID = CBlogPost::Update($postID, ["TITLE" => $postTitle, "PREVIEW_TEXT" => $postPreviewText]);
+            $postID = htmlspecialcharsEx(trim($_POST["ID"]));
+            $postTitle = htmlspecialcharsEx(trim($_POST["TITLE"]));
+            $postPreviewText = htmlspecialcharsEx(trim($_POST["PREVIEW_TEXT"]));
+            if (count($_POST["CATEGORY_ID"]) > 0) {
+                foreach ($_POST["CATEGORY_ID"] as $categoryID) {
+                    $categoryIDs .= trim($categoryIDs == "") ? $categoryID : "," . $categoryID;
+                }
+            }
+            $updatePostID = CBlogPost::Update($postID, ["TITLE" => $postTitle, "PREVIEW_TEXT" => $postPreviewText, "CATEGORY_ID" => $categoryIDs]);
             $result -> setData(["POST_ID" => $updatePostID]);
         }
-        return $result;
+        return $result -> getData();
     }
 }

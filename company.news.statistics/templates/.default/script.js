@@ -1,4 +1,3 @@
-//let newsFunctions = window.addEventListener('load', (event) => {
 BX.ready(() => {
 
     let statisticsWrapper = document.getElementById('news-statistics-wrapper');
@@ -8,7 +7,9 @@ BX.ready(() => {
     document.getElementById('news-statistics-ajax-wrapper').addEventListener('click', event => {
         if (event.target.id === 'news-statistics-change-user') {
             let onloadWindow = BX.PopupWindowManager.create("onload-window-user-search", null, {
-                content: '<div class="search-user-input-wrapper">' +
+                content:
+                    '<div id="news-statistics-load-icon" class="news-statistics-load-icon"></div>' +
+                    '<div class="search-user-input-wrapper">' +
                     '<input id="search-user-input" class="search-user-input" type="text" name="SEARCH_USER" placeholder="Имя, фамилия или ID пользователя" />' +
                     '<span id="search-user-input-button" class="search-user-input-button">Найти</span>' +
                     '</div>' +
@@ -69,6 +70,7 @@ BX.ready(() => {
                                     searchResultLIWrapper.innerText = searchUserResultList[searchUserResultuserID];
                                     searchUserResults.append(searchResultLIWrapper);
                                     searchResultLIWrapper.onclick = () => {
+                                        document.getElementById('news-statistics-load-icon').style.display = 'block';
                                         let userID = searchResultLIWrapper.getAttribute('data-user-id');
                                         if (userID != '') {
                                             BX.ajax({
@@ -84,6 +86,7 @@ BX.ready(() => {
                                                 start: true,
                                                 cache: false,
                                                 onsuccess: function (success) {
+                                                    document.getElementById('news-statistics-load-icon').style.display = 'none';
                                                     onloadWindow.close();
                                                     ajaxWrapper.innerHTML = success;
                                                     document.getElementById('news-statistics-post-diagramms-title').click();
@@ -150,7 +153,7 @@ BX.ready(() => {
                                 click: () => {
                                     BX.ajax.runComponentAction('uradugi:company.news.statistics', 'DeleteTag', {
                                         mode: 'ajax',
-                                        data: {USER_ID: userID, TAG_ID: tagID}
+                                        data: {CURRENT_USER_ID: userID, TAG_ID: tagID}
                                     }).then((response) => {
                                         let responseErrorData = response.data.errors === undefined ? 0 : response.data.errors.length;
                                         if (response.status == 'success' && response.errors.length < 1 && responseErrorData < 1) {
@@ -409,6 +412,63 @@ BX.ready(() => {
         }
     });
 
+    //Работа с тэгами у поста
+    document.getElementById('news-statistics-ajax-wrapper').addEventListener('click', event => {
+        if (event.target.className == 'news-statistics-post-tag') {
+            let postID = event.target.getAttribute('data-post-id');
+            let tagID = event.target.getAttribute('data-tag-id');
+            const postExistTagsList = document.getElementById('news-statistics-exist-post-tags-list-wrapper-' + postID).children;
+            if (parseInt(tagID) > 0) {
+                for (let i = 0; i < postExistTagsList.length; i++) {
+                    let existTagID = postExistTagsList[i].getAttribute('data-tag-id');
+                    if (parseInt(existTagID) == parseInt(tagID)) {
+                        postExistTagsList[i].classList.remove('news-statistics-exist-post-tag-active');
+                        event.target.remove();
+                        const postTagsList = document.getElementById('news-statistics-post-tags-list-wrapper-' + postID).children;
+                        if (parseInt(postTagsList.length) < 1) {
+                            document.getElementById('news-statistics-post-tags-title-' + postID).innerText = 'Тэги отсутствуют';
+                        }
+                    }
+                }
+            }
+        }
+    });
+    document.getElementById('news-statistics-ajax-wrapper').addEventListener('click', event => {
+        if (event.target.className.indexOf('news-statistics-exist-post-tag') != '-1') {
+            let postID = event.target.getAttribute('data-post-id');
+            let existTagID = event.target.getAttribute('data-tag-id');
+            let existTagName = event.target.textContent;
+            existTagName = existTagName.trim();
+            let postTagsList = document.getElementById('news-statistics-post-tags-list-wrapper-' + postID).children;
+            let postTagsListWrapper = document.getElementById('news-statistics-post-tags-list-wrapper-' + postID);
+            if (parseInt(existTagID) > 0) {
+                if (event.target.className.indexOf('news-statistics-exist-post-tag-active') != '-1') {
+                    for (let i = 0; i < postTagsList.length; i++) {
+                        let tagID = postTagsList[i].getAttribute('data-tag-id');
+                        if (parseInt(existTagID) == parseInt(tagID)) {
+                            postTagsList[i].remove();
+                            event.target.classList.remove('news-statistics-exist-post-tag-active');
+                            if (parseInt(postTagsList.length) < 1) {
+                                document.getElementById('news-statistics-post-tags-title-' + postID).innerText = 'Тэги отсутствуют';
+                            }
+                        }
+                    }
+                } else {
+                    let createdTagLI = document.createElement('li');
+                    createdTagLI.className = 'news-statistics-post-tag';
+                    createdTagLI.setAttribute('data-tag-id', existTagID);
+                    createdTagLI.setAttribute('data-post-id', postID);
+                    createdTagLI.innerText = existTagName;
+                    postTagsListWrapper.appendChild(createdTagLI);
+                    event.target.classList.add('news-statistics-exist-post-tag-active');
+                    if (parseInt(postTagsList.length) > 0) {
+                        document.getElementById('news-statistics-post-tags-title-' + postID).innerText = 'Тэги: ';
+                    }
+                }
+            }
+        }
+    });
+
     //Установка заголовка и текста анонса
     document.getElementById('news-statistics-ajax-wrapper').addEventListener('click', event => {
         if (event.target.className == 'news-statistics-save-post-data') {
@@ -416,9 +476,20 @@ BX.ready(() => {
             let userID = event.target.getAttribute('data-user-id');
             let postTitle = document.getElementById('news-statistics-set-title-' + postID).value;
             let postPreviewText = document.getElementById('news-statistics-set-preview-text-area-' + postID).value;
+            let postTags = document.getElementById('news-statistics-post-tags-list-wrapper-' + postID).children;
+            let arPostTags = [];
+            for (let i = 0; i < postTags.length; i++) {
+                arPostTags.push(postTags[i].getAttribute('data-tag-id'));
+            }
             BX.ajax.runComponentAction('uradugi:company.news.statistics', 'UpdatePostData', {
                 mode: 'ajax',
-                data: {POST_ID: postID, USER_ID: userID, POST_PREVIEW_TEXT: postPreviewText, POST_TITLE: postTitle}
+                data: {
+                    ID: postID,
+                    CURRENT_USER_ID: userID,
+                    PREVIEW_TEXT: postPreviewText,
+                    TITLE: postTitle,
+                    CATEGORY_ID: arPostTags
+                }
             }).then((response) => {
                 let responseErrorData = response.data.errors === undefined ? 0 : response.data.errors.length;
                 if (response.status == 'success' && response.errors.length < 1 && response.errors.length < 1 && responseErrorData < 1) {
@@ -435,7 +506,6 @@ BX.ready(() => {
                     } setTimeout(hideErrorUpdatePostPreviewText, 2000);
                 }
             }, (response) => {
-                console.log(response);
                 let setPostDataError = document.getElementById('news-statistics-save-post-data-error-' + postID);
                 setPostDataError.style.display = 'block';
                 function hideErrorUpdatePostPreviewText() {

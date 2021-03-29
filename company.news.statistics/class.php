@@ -181,7 +181,9 @@ class CompanyNewsStatistics extends CBitrixComponent
             }
             $queryCategories = CBlogCategory::GetList(["ID" => "DESC"], ["BLOG_ID" => $blogID, "AUTHOR_ID" => $this -> arParams["USERS"]], false, false, ["ID", "NAME"]);
             $tags = [];
+            $tagsValues = [];
             while ($category = $queryCategories -> fetch()) {
+                $tagsValues[$category["ID"]] = $category["NAME"];
                 $tags[$category["ID"]] = $category;
                 $tags[$category["ID"]]["TAG_COUNT"] = 0;
                 foreach ($blogPostsTags as $blogPostTagKey => $blogPostTagValue) {
@@ -191,6 +193,7 @@ class CompanyNewsStatistics extends CBitrixComponent
                     }
                 }
             }
+            $result["TAGS_VALUES"] = $tagsValues;
 
             function sortTags ($b, $a)
             {
@@ -264,6 +267,7 @@ class CompanyNewsStatistics extends CBitrixComponent
         \Bitrix\Main\Loader::includeModule("blog");
         $this -> arResult = self::getBlogPosts();
         $this -> arResult["RUS_MONTHS"] = self::getRusMonths();
+        $this -> arResult["COMPONENT_PATH"] = $this -> GetPath();
 
         $cacheTime = 86400;
         $cacheId = "statisticsID";

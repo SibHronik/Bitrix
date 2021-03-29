@@ -35,6 +35,30 @@
     font-style: italic;
 }
 
+.news-statistics-load-icon{
+    display: none;
+    box-sizing: border-box;
+    width: 20px;
+    height: 20px;
+    border: 3px solid #f3f3f3;
+    border-top: 3px solid #2067b0;
+    border-radius: 50%;
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    animation: spin 3s linear infinite;
+}
+
+@keyframes spin {
+    0%{
+        transform: rotate(0deg);
+    }
+
+    100%{
+        transform: rotate(360deg);
+    }
+}
+
 .news-statistics-error{
     box-sizing: border-box;
     width: 100%;
@@ -821,6 +845,74 @@
 
 .set-preview-text-sq-danger{
     color: #bb0000;
+}
+
+.news-statistics-post-tags-wrapper,
+.news-statistics-exist-post-tags-wrapper{
+    display: flex;
+    justify-content: flex-start;
+    align-items: stretch;
+    flex-wrap: nowrap;
+    box-sizing: border-box;
+    width: 100%;
+    height: auto;
+    margin: 0 auto 15px;
+    padding: 0;
+}
+
+.news-statistics-post-tags-wrapper{
+    margin: 0 auto 5px;
+}
+
+.news-statistics-post-tags-title,
+.news-statistics-exist-post-tags-title{
+    box-sizing: border-box;
+    width: 120px;
+    min-width: 120px;
+    height: auto;
+    margin: 2px 10px 5px 0;
+    padding: 0;
+    font-weight: 500;
+}
+
+
+.news-statistics-post-tags-list-wrapper,
+.news-statistics-exist-post-tags-list-wrapper{
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    width: auto;
+    height: auto;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.news-statistics-post-tags-list-wrapper li,
+.news-statistics-exist-post-tags-list-wrapper li{
+    box-sizing: border-box;
+    width: auto;
+    height: auto;
+    margin: 0 5px 5px 0;
+    padding: 1px 5px;
+    border: 1px solid #2067B0;
+    border-radius: 3px;
+    font-size: 13px;
+    color: #2067B0;
+    cursor: pointer;
+    transition: 0.2s;
+    user-select: none;
+}
+
+.news-statistics-post-tags-list-wrapper li:hover,
+.news-statistics-exist-post-tags-list-wrapper li:hover{
+    opacity: 0.8;
+}
+
+.news-statistics-exist-post-tag-active{
+    border: 1px solid #b7b7b7 !important;
+    color: #b7b7b7 !important;
 }
 
 .news-statistics-save-post-data-buttons-wrapper{
