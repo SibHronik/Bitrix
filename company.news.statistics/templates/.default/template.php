@@ -155,7 +155,7 @@ Asset::getInstance()->addJs("https://cdn.amcharts.com/lib/4/themes/animated.js")
             </div>
             <?php endif; ?>
             <div class="news-statistics-set-post-preview-text-wrapper">
-                <div class="news-statistics-set-post-preview-text-title">Список постов</div>
+                <div class="news-statistics-set-post-preview-text-title"><?=Loc::getMessage("POST_LIST");?></div>
                 <?php if (count($arResult["POSTS"]) > 0): ?>
                     <?php $arPosts = array_chunk($arResult["POSTS"], 10); ?>
                     <?php $countPosts = 0; ?>
@@ -170,10 +170,10 @@ Asset::getInstance()->addJs("https://cdn.amcharts.com/lib/4/themes/animated.js")
                                             <span class="news-statistics-set-post-preview-text-name-count">
                                                 <?=$countPosts . "</span>. " . $postData["TITLE"];?>
                                         </span>
-                                        <span class="news-statistics-set-post-preview-text-date"> Опубликовано: <?=$postData["DATE_CREATE"];?></span>
+                                        <span class="news-statistics-set-post-preview-text-date"> <?=Loc::getMessage("PUBLIC");?> <?=$postData["DATE_CREATE"];?></span>
                                         <div class="news-statistics-set-post-title-and-preview-text-dropdown">
                                             <span class="set-post-data-dropdown-button" data-post-id="<?=$postData["ID"];?>">
-                                                Задать текст заголовка и анонса
+                                                <?=Loc::getMessage("SET_TITLE_AND_PREVIEW_TEXT");?>
                                             </span>
                                         </div>
 
@@ -183,35 +183,35 @@ Asset::getInstance()->addJs("https://cdn.amcharts.com/lib/4/themes/animated.js")
                                         >
                                             <input type="text" id="news-statistics-set-title-<?=$postData["ID"];?>"
                                                class="news-statistics-set-title"
-                                               placeholder="Введите заголовок"
+                                               placeholder="<?=Loc::getMessage("SET_TITLE");?>"
                                                data-post-id="<?=$postData["ID"];?>"
-                                               data-length="70"
+                                               data-length="<?=Loc::getMessage("TITLE_LENGTH");?>"
                                                value="<?=$postData["TITLE"];?>"
                                             />
                                             <div class="news-statistics-set-title-symbols-quantity-wrapper">
-                                                Рекомендуемое количество символов:
-                                                <span class="news-statistics-set-title-symbols-quantity">70</span>.
-                                                Введено символов:
+                                                <?=Loc::getMessage("SYMBOLS_RECOMMENDED");?>
+                                                <span class="news-statistics-set-title-symbols-quantity"><?=Loc::getMessage("TITLE_LENGTH");?></span>.
+                                                <?=Loc::getMessage("SYMBOLS_INPUT");?>
                                                 <!--sq-symbols-quantity-->
                                                 <span
                                                     id="set-title-sq-passed-<?=$postData['ID'];?>"
-                                                    class="set-title-sq-passed<?=intVal(mb_strlen($postData['TITLE'])) > intVal(70) ? " set-title-sq-danger" : ""; ?>"
+                                                    class="set-title-sq-passed<?=intVal(mb_strlen($postData['TITLE'])) > intVal(Loc::getMessage("TITLE_LENGTH")) ? " set-title-sq-danger" : ""; ?>"
                                                 ><?=mb_strlen($postData["TITLE"]);?></span>
                                             </div>
                                             <textarea data-post-id="<?=$postData["ID"];?>"
                                                   id="news-statistics-set-preview-text-area-<?=$postData["ID"];?>"
                                                   class="news-statistics-set-preview-text-area"
-                                                  data-length="100"
+                                                  data-length="<?=Loc::getMessage("PREVIEW_TEXT_LENGTH");?>"
                                                   value="<?=$postData["PREVIEW_TEXT"];?>"
                                             ><?=$postData["PREVIEW_TEXT"];?></textarea>
                                             <div class="news-statistics-set-preview-text-symbols-quantity-wrapper">
-                                                Рекомендуемое количество символов:
-                                                <span class="news-statistics-set-preview-text-symbols-quantity">100</span>
-                                                Введено символов:
+                                                <?=Loc::getMessage("SYMBOLS_RECOMMENDED");?>
+                                                <span class="news-statistics-set-preview-text-symbols-quantity"><?=Loc::getMessage("PREVIEW_TEXT_LENGTH");?></span>.
+                                                <?=Loc::getMessage("SYMBOLS_INPUT");?>
                                                 <!--sq-symbols-quantity-->
                                                 <span
                                                     id="set-preview-text-sq-passed-<?=$postData['ID'];?>"
-                                                    class="set-preview-text-sq-passed<?=intVal(mb_strlen($postData['PREVIEW_TEXT'])) > intVal(100) ? " set-preview-text-sq-danger" : ""; ?>">
+                                                    class="set-preview-text-sq-passed<?=intVal(mb_strlen($postData['PREVIEW_TEXT'])) > intVal(Loc::getMessage("PREVIEW_TEXT_LENGTH")) ? " set-preview-text-sq-danger" : ""; ?>">
                                                     <?=mb_strlen($postData["PREVIEW_TEXT"]);?>
                                                 </span>
                                             </div>
@@ -222,7 +222,7 @@ Asset::getInstance()->addJs("https://cdn.amcharts.com/lib/4/themes/animated.js")
                                                 <?php $postTags = explode(",", $postData["CATEGORY_ID"]); ?>
                                                 <?php endif; ?>
                                                 <div id="news-statistics-post-tags-title-<?=$postData['ID'];?>"
-                                                     class="news-statistics-post-tags-title">Тэги: </div>
+                                                     class="news-statistics-post-tags-title"><?=Loc::getMessage("TAGS");?> </div>
                                                 <ul id="news-statistics-post-tags-list-wrapper-<?=$postData['ID'];?>"
                                                     class="news-statistics-post-tags-list-wrapper">
                                                 <?php if (count($postTags) > 0): ?>
@@ -236,11 +236,11 @@ Asset::getInstance()->addJs("https://cdn.amcharts.com/lib/4/themes/animated.js")
                                                 <?php else: ?>
                                                 </ul>
                                                     <div id="news-statistics-post-tags-title-<?=$postData['ID'];?>"
-                                                         class="news-statistics-post-tags-title">Тэги отсутствуют</div>
+                                                         class="news-statistics-post-tags-title"><?=Loc::getMessage("TAGS_NOT_FOUND");?></div>
                                                 <?php endif; ?>
                                             </div>
                                             <div class="news-statistics-exist-post-tags-wrapper">
-                                                <div class="news-statistics-exist-post-tags-title">Доступные тэги: </div>
+                                                <div class="news-statistics-exist-post-tags-title"><?=Loc::getMessage("AVAILABLE_TAGS");?></div>
                                                 <ul id="news-statistics-exist-post-tags-list-wrapper-<?=$postData['ID'];?>"
                                                     class="news-statistics-exist-post-tags-list-wrapper">
                                                 <?php foreach ($arResult["TAGS_VALUES"] as $postExistTagKey => $postExitstTagValue): ?>
@@ -265,11 +265,11 @@ Asset::getInstance()->addJs("https://cdn.amcharts.com/lib/4/themes/animated.js")
                                                     </div>
                                                     <div
                                                         id="news-statistics-save-post-data-error-<?=$postData['ID'];?>"
-                                                        class="news-statistics-save-post-data-error">Ошибка сохранения
+                                                        class="news-statistics-save-post-data-error"><?=Loc::getMessage("SAVE_ERROR");?>
                                                     </div>
                                                 </div>
                                                 <div class="news-statistics-open-preview-button"
-                                                    data-post-id="<?=$postData['ID'];?>">Открыть&nbsp;предпросмотр</div>
+                                                    data-post-id="<?=$postData['ID'];?>"><?=Loc::getMessage("OPEN_PREVIEW");?></div>
                                                 <div id="news-statistics-preview-posts-wrapper-<?=$postData['ID'];?>"
                                                     class="news-statistics-preview-posts-wrapper"
                                                     data-post-id="<?=$postData['ID'];?>">
@@ -281,7 +281,7 @@ Asset::getInstance()->addJs("https://cdn.amcharts.com/lib/4/themes/animated.js")
                                                         <div id="news-statistics-preview-post-center-wrapper-<?=$postData['ID'];?>"
                                                             class="news-statistics-preview-post-center-wrapper">
                                                             <div class="news-statistics-preview-post-image">
-                                                                <div class="news-statistics-preview-post-image-title">Изображение</div>
+                                                                <div class="news-statistics-preview-post-image-title"><?=Loc::getMessage("IMAGE");?></div>
                                                             </div>
                                                             <div id="news-statistics-preview-post-title-<?=$postData['ID'];?>"
                                                                 class="news-statistics-preview-post-title"><?=trim($postData["TITLE"]);?></div>

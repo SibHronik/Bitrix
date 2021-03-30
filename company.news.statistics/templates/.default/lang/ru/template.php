@@ -25,4 +25,17 @@ $MESS["USER_INFO"] = "Информация о пользователе";
 $MESS["POSTS_PER_MONTHS"] = "Количество постов по месяцам:";
 $MESS["TAGS_NOT_FOUND"] = "Тэги не найдены";
 $MESS["CHANGE_USER"] = "Сменить пользователя";
+$MESS["PUBLIC"] = "Опубликовано:";
+$MESS["SET_TITLE_AND_PREVIEW_TEXT"] = "Задать текст заголовка и анонса";
+$MESS["SET_TITLE"] = "Введите заголовок";
+$MESS["TITLE_LENGTH"] = "70";
+$MESS["SYMBOLS_RECOMMENDED"] = "Рекомендуемое количество символов:";
+$MESS["SYMBOLS_INPUT"] = "Введено символов:";
+$MESS["PREVIEW_TEXT_LENGTH"] = "100";
+$MESS["TAGS"] = "Тэги:";
+$MESS["TAGS_NOT_FOUND"] = "Тэги отсутствуют";
+$MESS["AVAILABLE_TAGS"] = "Доступные тэги";
+$MESS["SAVE_ERROR"] = "Ошибка сохранения";
+$MESS["OPEN_PREVIEW"] = "Открыть предпросмотр";
+$MESS["IMAGE"] = "Изображение";
 ?>
