@@ -386,6 +386,7 @@ BX.ready(() => {
                 document.getElementById('set-title-sq-passed-' + postID).classList.add('set-title-sq-danger');
             }
             document.getElementById('set-title-sq-passed-' + postID).innerText = fieldCurrentLength;
+            document.getElementById('news-statistics-preview-post-title-' + postID).innerText = event.target.value;
         }
     });
 
@@ -409,6 +410,7 @@ BX.ready(() => {
                 document.getElementById('set-preview-text-sq-passed-' + postID).classList.add('set-preview-text-sq-danger');
             }
             document.getElementById('set-preview-text-sq-passed-' + postID).innerText = fieldCurrentLength;
+            document.getElementById('news-statistics-preview-post-description-' + postID).innerText = event.target.value;
         }
     });
 
@@ -424,6 +426,7 @@ BX.ready(() => {
                     if (parseInt(existTagID) == parseInt(tagID)) {
                         postExistTagsList[i].classList.remove('news-statistics-exist-post-tag-active');
                         event.target.remove();
+                        document.getElementById('news-statistics-preview-post-tag-' + tagID).remove();
                         const postTagsList = document.getElementById('news-statistics-post-tags-list-wrapper-' + postID).children;
                         if (parseInt(postTagsList.length) < 1) {
                             document.getElementById('news-statistics-post-tags-title-' + postID).innerText = 'Тэги отсутствуют';
@@ -448,6 +451,7 @@ BX.ready(() => {
                         if (parseInt(existTagID) == parseInt(tagID)) {
                             postTagsList[i].remove();
                             event.target.classList.remove('news-statistics-exist-post-tag-active');
+                            document.getElementById('news-statistics-preview-post-tag-' + tagID).remove();
                             if (parseInt(postTagsList.length) < 1) {
                                 document.getElementById('news-statistics-post-tags-title-' + postID).innerText = 'Тэги отсутствуют';
                             }
@@ -464,6 +468,10 @@ BX.ready(() => {
                     if (parseInt(postTagsList.length) > 0) {
                         document.getElementById('news-statistics-post-tags-title-' + postID).innerText = 'Тэги: ';
                     }
+                    let createdPreviewPostTagLI = document.createElement('li');
+                    createdPreviewPostTagLI.id = 'news-statistics-preview-post-tag-' + existTagID;
+                    createdPreviewPostTagLI.innerText = existTagName;
+                    document.getElementById('news-statistics-preview-post-tags-' + postID).appendChild(createdPreviewPostTagLI);
                 }
             }
         }
@@ -515,6 +523,23 @@ BX.ready(() => {
         }
     });
 
+    //Открытие предпросмотра поста
+    document.getElementById('news-statistics-ajax-wrapper').addEventListener('click', event => {
+        if (event.target.className == 'news-statistics-open-preview-button') {
+            let postID = event.target.getAttribute('data-post-id');
+            let ajaxWrapperWidth = document.getElementById('news-statistics-ajax-wrapper').offsetWidth;
+            let previewPostWrapperWidth = (ajaxWrapperWidth - (ajaxWrapperWidth / 100 * 3)) / 3;
+            document.getElementById('news-statistics-preview-post-center-wrapper-' + postID).style.width = previewPostWrapperWidth + 'px';
+            if (document.getElementById('news-statistics-preview-posts-wrapper-' + postID).style.display == 'block') {
+                document.getElementById('news-statistics-preview-posts-wrapper-' + postID).style.display = 'none';
+                event.target.innerText = 'Открыть предпросмотр';
+            } else {
+                document.getElementById('news-statistics-preview-posts-wrapper-' + postID).style.display = 'block';
+                event.target.innerText = 'Закрыть предпросмотр';
+            }
+        }
+    });
+
     //Пагинация постов
     document.getElementById('news-statistics-ajax-wrapper').addEventListener('click', event => {
         if (event.target.className == 'news-statistics-pagination-point') {
@@ -534,5 +559,4 @@ BX.ready(() => {
             }
         }
     });
-
 });

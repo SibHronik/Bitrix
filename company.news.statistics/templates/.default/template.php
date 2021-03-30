@@ -185,33 +185,33 @@ Asset::getInstance()->addJs("https://cdn.amcharts.com/lib/4/themes/animated.js")
                                                class="news-statistics-set-title"
                                                placeholder="Введите заголовок"
                                                data-post-id="<?=$postData["ID"];?>"
-                                               data-length="95"
+                                               data-length="70"
                                                value="<?=$postData["TITLE"];?>"
                                             />
                                             <div class="news-statistics-set-title-symbols-quantity-wrapper">
                                                 Рекомендуемое количество символов:
-                                                <span class="news-statistics-set-title-symbols-quantity">95</span>.
+                                                <span class="news-statistics-set-title-symbols-quantity">70</span>.
                                                 Введено символов:
                                                 <!--sq-symbols-quantity-->
                                                 <span
                                                     id="set-title-sq-passed-<?=$postData['ID'];?>"
-                                                    class="set-title-sq-passed<?=intVal(mb_strlen($postData['TITLE'])) > intVal(95) ? " set-title-sq-danger" : ""; ?>"
+                                                    class="set-title-sq-passed<?=intVal(mb_strlen($postData['TITLE'])) > intVal(70) ? " set-title-sq-danger" : ""; ?>"
                                                 ><?=mb_strlen($postData["TITLE"]);?></span>
                                             </div>
                                             <textarea data-post-id="<?=$postData["ID"];?>"
                                                   id="news-statistics-set-preview-text-area-<?=$postData["ID"];?>"
                                                   class="news-statistics-set-preview-text-area"
-                                                  data-length="125"
+                                                  data-length="100"
                                                   value="<?=$postData["PREVIEW_TEXT"];?>"
                                             ><?=$postData["PREVIEW_TEXT"];?></textarea>
                                             <div class="news-statistics-set-preview-text-symbols-quantity-wrapper">
                                                 Рекомендуемое количество символов:
-                                                <span class="news-statistics-set-preview-text-symbols-quantity">125</span>
+                                                <span class="news-statistics-set-preview-text-symbols-quantity">100</span>
                                                 Введено символов:
                                                 <!--sq-symbols-quantity-->
                                                 <span
                                                     id="set-preview-text-sq-passed-<?=$postData['ID'];?>"
-                                                    class="set-preview-text-sq-passed<?=intVal(mb_strlen($postData['PREVIEW_TEXT'])) > intVal(125) ? " set-preview-text-sq-danger" : ""; ?>">
+                                                    class="set-preview-text-sq-passed<?=intVal(mb_strlen($postData['PREVIEW_TEXT'])) > intVal(100) ? " set-preview-text-sq-danger" : ""; ?>">
                                                     <?=mb_strlen($postData["PREVIEW_TEXT"]);?>
                                                 </span>
                                             </div>
@@ -221,11 +221,11 @@ Asset::getInstance()->addJs("https://cdn.amcharts.com/lib/4/themes/animated.js")
                                                 <?php if (trim($postData["CATEGORY_ID"]) != ""): ?>
                                                 <?php $postTags = explode(",", $postData["CATEGORY_ID"]); ?>
                                                 <?php endif; ?>
-                                                <?php if (count($postTags) > 0): ?>
                                                 <div id="news-statistics-post-tags-title-<?=$postData['ID'];?>"
                                                      class="news-statistics-post-tags-title">Тэги: </div>
                                                 <ul id="news-statistics-post-tags-list-wrapper-<?=$postData['ID'];?>"
                                                     class="news-statistics-post-tags-list-wrapper">
+                                                <?php if (count($postTags) > 0): ?>
                                                     <?php foreach ($postTags as $postTag): ?>
                                                     <?php if (in_array($postTag, array_keys($arResult["TAGS_VALUES"]))): ?>
                                                     <li class="news-statistics-post-tag"
@@ -233,9 +233,10 @@ Asset::getInstance()->addJs("https://cdn.amcharts.com/lib/4/themes/animated.js")
                                                         data-post-id="<?=$postData['ID'];?>"><?=$arResult["TAGS_VALUES"][$postTag];?></li>
                                                     <?php endif; ?>
                                                     <?php endforeach; ?>
-                                                </ul>
                                                 <?php else: ?>
-                                                    <div class="news-statistics-post-tags-title">Тэги отсутствуют</div>
+                                                </ul>
+                                                    <div id="news-statistics-post-tags-title-<?=$postData['ID'];?>"
+                                                         class="news-statistics-post-tags-title">Тэги отсутствуют</div>
                                                 <?php endif; ?>
                                             </div>
                                             <div class="news-statistics-exist-post-tags-wrapper">
@@ -251,19 +252,65 @@ Asset::getInstance()->addJs("https://cdn.amcharts.com/lib/4/themes/animated.js")
                                             </div>
                                             <?php endif; ?>
                                             <div class="news-statistics-save-post-data-buttons-wrapper">
-                                                <div
-                                                    data-post-id="<?=$postData["ID"];?>"
-                                                    data-user-id="<?=$arResult['CURRENT_USER']['ID'];?>"
-                                                    id="news-statistics-save-post-data-<?=$postData["ID"];?>"
-                                                    class="news-statistics-save-post-data<?=trim($postData["PREVIEW_TEXT"]) == "" ? " news-statistics-save-post-data-disabled" : "";?>"
-                                                >Сохранить</div>
-                                                <div
-                                                    id="news-statistics-save-post-data-success-<?=$postData["ID"];?>"
-                                                    class="news-statistics-save-post-data-success">&#10004;
+                                                <div class="news-statistics-save-post-data-buttons">
+                                                    <div
+                                                        data-post-id="<?=$postData["ID"];?>"
+                                                        data-user-id="<?=$arResult['CURRENT_USER']['ID'];?>"
+                                                        id="news-statistics-save-post-data-<?=$postData['ID'];?>"
+                                                        class="news-statistics-save-post-data<?=trim($postData["PREVIEW_TEXT"]) == "" ? " news-statistics-save-post-data-disabled" : "";?>"
+                                                    >Сохранить</div>
+                                                    <div
+                                                        id="news-statistics-save-post-data-success-<?=$postData['ID'];?>"
+                                                        class="news-statistics-save-post-data-success">&#10004;
+                                                    </div>
+                                                    <div
+                                                        id="news-statistics-save-post-data-error-<?=$postData['ID'];?>"
+                                                        class="news-statistics-save-post-data-error">Ошибка сохранения
+                                                    </div>
                                                 </div>
-                                                <div
-                                                    id="news-statistics-save-post-data-error-<?=$postData["ID"];?>"
-                                                    class="news-statistics-save-post-data-error">Ошибка сохранения
+                                                <div class="news-statistics-open-preview-button"
+                                                    data-post-id="<?=$postData['ID'];?>">Открыть&nbsp;предпросмотр</div>
+                                                <div id="news-statistics-preview-posts-wrapper-<?=$postData['ID'];?>"
+                                                    class="news-statistics-preview-posts-wrapper"
+                                                    data-post-id="<?=$postData['ID'];?>">
+                                                    <div class="news-statistics-preview-posts-triangle"></div>
+                                                    <div class="news-statistics-preview-posts">
+                                                        <div class="news-statistics-preview-post-left-wrapper">
+                                                            <div class="news-statistics-preview-post-image"></div>
+                                                        </div>
+                                                        <div id="news-statistics-preview-post-center-wrapper-<?=$postData['ID'];?>"
+                                                            class="news-statistics-preview-post-center-wrapper">
+                                                            <div class="news-statistics-preview-post-image">
+                                                                <div class="news-statistics-preview-post-image-title">Изображение</div>
+                                                            </div>
+                                                            <div id="news-statistics-preview-post-title-<?=$postData['ID'];?>"
+                                                                class="news-statistics-preview-post-title"><?=trim($postData["TITLE"]);?></div>
+                                                            <div  id="news-statistics-preview-post-description-<?=$postData['ID'];?>"
+                                                                class="news-statistics-preview-post-description"><?=trim($postData["PREVIEW_TEXT"]);?></div>
+                                                            <div class="news-statistics-preview-post-tags-wrapper">
+                                                                <ul id="news-statistics-preview-post-tags-<?=$postData['ID'];?>"
+                                                                    class="news-statistics-preview-post-tags">
+                                                                <?php if (count($postTags) > 0): ?>
+                                                                    <li>Тэги: </li>
+                                                                    <?php foreach ($postTags as $postTag): ?>
+                                                                    <li id="news-statistics-preview-post-tag-<?=$postTag;?>"><?=$arResult["TAGS_VALUES"][$postTag];?></li>
+                                                                    <?php endforeach; ?>
+                                                                <?php endif; ?>
+                                                                </ul>
+                                                            </div>
+                                                            <div class="news-statistics-preview-post-date-like-wrapper">
+                                                                <div class="news-statistics-preview-post-date">
+                                                                    <?=date("d.m.Y", strtotime($postData["DATE_CREATE"]));?>
+                                                                </div>
+                                                                <div class="news-statistics-preview-post-likes">
+                                                                    <?=$postData["VOTES"];?>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="news-statistics-preview-post-right-wrapper">
+                                                            <div class="news-statistics-preview-post-image"></div>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>

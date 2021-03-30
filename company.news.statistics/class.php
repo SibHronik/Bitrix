@@ -150,6 +150,7 @@ class CompanyNewsStatistics extends CBitrixComponent
                 $topViews[$blogPost["ID"]]["TOTAL_VIEWS"] = $blogPost["VIEWS"];
 
                 $queryVotes = CRatings::GetRatingVoteResult("BLOG_POST", $blogPost["ID"]);
+                $blogPost["VOTES"] = trim($queryVotes["TOTAL_VOTES"]) == "" ? "0" : $queryVotes["TOTAL_VOTES"];
                 $topVotes[$blogPost["ID"]]["NAME"] = $blogPost["TITLE"];
                 if (intval($queryVotes["TOTAL_VOTES"]) > 0) {
                     $topVotes[$blogPost["ID"]]["TOTAL_VOTES"] = $queryVotes["TOTAL_VOTES"];
