@@ -3,12 +3,12 @@
 <?php
 \Bitrix\Main\Loader::includeModule("sibhronik.quizes");
 use Bitrix\Main\Loader;
-use Sibhronik\Quiz;
-use Sibhronik\Quiz\QuizTable;
-use Sibhronik\Quiz\QuestionsTable;
-use Sibhronik\Quiz\AnswersTable;
-use Sibhronik\Quiz\UserAnswersTable;
-use Sibhronik\Quiz\UsersAnsweredTable;
+use Sibhronik\Quizes;
+use Sibhronik\Quizes\QuizesTable;
+use Sibhronik\Quizes\QuestionsTable;
+use Sibhronik\Quizes\AnswersTable;
+use Sibhronik\Quizes\UserAnswersTable;
+use Sibhronik\Quizes\UsersAnsweredTable;
 use Bitrix\Main\Type\DateTime;
 
 class SibhronikQuizActions extends \Bitrix\Main\Engine\Controller
@@ -33,7 +33,7 @@ class SibhronikQuizActions extends \Bitrix\Main\Engine\Controller
             $quizDateFinish = date("d.m.Y H:i:s", strtotime($quizDateFinish));
         }
         if (trim($quizName) != "") {
-            $addQuiz = Sibhronik\Quiz\QuizTable::add([
+            $addQuiz = Sibhronik\Quizes\QuizesTable::add([
                 "ACTIVE" => 1,
                 "NAME" => $quizName,
                 "DESCRIPTION" => $quizDescription,
@@ -45,7 +45,7 @@ class SibhronikQuizActions extends \Bitrix\Main\Engine\Controller
                     $quizID = intval($addQuiz -> getId());
                     if (count($_REQUEST["QUIZ"]["QUESTIONS"]) > 0) {
                         foreach ($_REQUEST["QUIZ"]["QUESTIONS"] as $questionIndex => $question) {
-                            $addQuestion = Sibhronik\Quiz\QuestionsTable::add([
+                            $addQuestion = Sibhronik\Quizes\QuestionsTable::add([
                                 "QUIZ_ID" => $quizID,
                                 "ACTIVE" => 1,
                                 "NAME" => htmlspecialcharsEx($question["NAME"]),
@@ -57,7 +57,7 @@ class SibhronikQuizActions extends \Bitrix\Main\Engine\Controller
                                     $questionID = intval($addQuestion -> getId());
                                     if (count($question["ANSWERS"]) > 0) {
                                         foreach ($question["ANSWERS"] as $answerIndex => $answer) {
-                                            $addAnswer = Sibhronik\Quiz\AnswersTable::add([
+                                            $addAnswer = Sibhronik\Quizes\AnswersTable::add([
                                                 "QUIZ_ID" => $quizID,
                                                 "QUESTION_ID" => $questionID,
                                                 "ACTIVE" => 1,

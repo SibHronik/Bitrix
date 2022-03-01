@@ -6,10 +6,10 @@
 <div class="quiz-menu-wrapper">
     <ul class="quiz-menu">
         <?php if ($_GET["quiz_add"] != "Y"):?>
-            <li><a class="quiz-add-link" href="/user/?quiz_add=Y">Добавить опрос</a></li>
-            <li><a class="quiz-list-link" href="/user/">Список опросов</a></li>
+            <li><a class="quiz-add-link" href="/sibhronik/?quiz_add=Y">Добавить опрос</a></li>
+            <li><a class="quiz-list-link" href="/sibhronik/">Список опросов</a></li>
         <?php else: ?>
-            <li><a class="quiz-list-link" href="/user/">Список опросов</a></li>
+            <li><a class="quiz-list-link" href="/sibhronik/">Список опросов</a></li>
         <?php endif; ?>
     </ul>
 </div>
@@ -268,10 +268,10 @@
                     <?php if (in_array($arResult["CURRENT_USER"], $arResult["QUIZ_ANSWERED_USERS"][$quizIndex])): ?>
                         <div class="quiz-title-success"><?=$quiz["NAME"];?> <i>(опрос пройден)</i></div>
                     <?php else: ?>
-                        <div class="quiz-title"><a href="/user/?quiz_id=<?=$quiz["ID"];?>"><?=$quiz["NAME"];?></a></div>
+                        <div class="quiz-title"><a href="/sibhronik/?quiz_id=<?=$quiz["ID"];?>"><?=$quiz["NAME"];?></a></div>
                     <?php endif; ?>
                     <div class="quiz-description"><?=$quiz["DESCRIPTION"];?></div>
-                    <div class="quiz-details-link"><a href="/user/?quiz_id_results=<?=$quiz["ID"];?>">Результаты опроса</a></div>
+                    <div class="quiz-details-link"><a href="/sibhronik/?quiz_id_results=<?=$quiz["ID"];?>">Результаты опроса</a></div>
                 </div>
             </div>
             <?php endforeach; ?>

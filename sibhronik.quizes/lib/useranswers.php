@@ -1,6 +1,6 @@
 <?php
 
-namespace Sibhronik\Quiz;
+namespace Sibhronik\Quizes;
 
 use Bitrix\Main\Entity;
 use Bitrix\Main\Entity\Validator;

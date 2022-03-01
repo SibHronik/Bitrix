@@ -5,11 +5,11 @@ use Bitrix\Main\Entity\Base;
 use Bitrix\Main\Application;
 use Bitrix\Main\ModuleManager;
 use Bitrix\Main\Localization\Loc;
-use Sibhronik\Quiz\QuizTable;
-use Sibhronik\Quiz\QuestionsTable;
-use Sibhronik\Quiz\AnswersTable;
-use Sibhronik\Quiz\UserAnswersTable;
-use Sibhronik\Quiz\UsersAnsweredTable;
+use Sibhronik\Quizes\QuizesTable;
+use Sibhronik\Quizes\QuestionsTable;
+use Sibhronik\Quizes\AnswersTable;
+use Sibhronik\Quizes\UserAnswersTable;
+use Sibhronik\Quizes\UsersAnsweredTable;
 
 Loc::loadMessages(__FILE__);
 
@@ -61,7 +61,7 @@ class sibhronik_quizes extends CModule
     public function installDB()
     {
         if (Loader::includeModule($this -> MODULE_ID)) {
-            QuizTable::getEntity() -> createDbTable();
+            QuizesTable::getEntity() -> createDbTable();
             QuestionsTable::getEntity() -> createDbTable();
             AnswersTable::getEntity() -> createDbTable();
             UserAnswersTable::getEntity() -> createDbTable();
@@ -72,23 +72,23 @@ class sibhronik_quizes extends CModule
     public function uninstallDB()
     {
         if (Loader::includeModule($this -> MODULE_ID)) {
-            if (Application::getConnection() -> isTableExists(Base::getInstance("\Sibhronik\Quiz\QuizTable") -> getDBTableName())) {
+            if (Application::getConnection() -> isTableExists(Base::getInstance("\Sibhronik\Quizes\QuizesTable") -> getDBTableName())) {
                 $connection = Application::getInstance() -> getConnection();
-                $connection -> dropTable(QuizTable::getTableName());
+                $connection -> dropTable(QuizesTable::getTableName());
             }
-            if (Application::getConnection() -> isTableExists(Base::getInstance("\Sibhronik\Quiz\QuestionsTable") -> getDBTableName())) {
+            if (Application::getConnection() -> isTableExists(Base::getInstance("\Sibhronik\Quizes\QuestionsTable") -> getDBTableName())) {
                 $connection = Application::getInstance() -> getConnection();
                 $connection -> dropTable(QuestionsTable::getTableName());
             }
-            if (Application::getConnection() -> isTableExists(Base::getInstance("\Sibhronik\Quiz\AnswersTable") -> getDBTableName())) {
+            if (Application::getConnection() -> isTableExists(Base::getInstance("\Sibhronik\Quizes\AnswersTable") -> getDBTableName())) {
                 $connection = Application::getInstance() -> getConnection();
                 $connection -> dropTable(AnswersTable::getTableName());
             }
-            if (Application::getConnection() -> isTableExists(Base::getInstance("\Sibhronik\Quiz\UserAnswersTable") -> getDBTableName())) {
+            if (Application::getConnection() -> isTableExists(Base::getInstance("\Sibhronik\Quizes\UserAnswersTable") -> getDBTableName())) {
                 $connection = Application::getInstance() -> getConnection();
                 $connection -> dropTable(UserAnswersTable::getTableName());
             }
-            if (Application::getConnection() -> isTableExists(Base::getInstance("\Sibhronik\Quiz\UsersAnsweredTable") -> getDBTableName())) {
+            if (Application::getConnection() -> isTableExists(Base::getInstance("\Sibhronik\Quizes\UsersAnsweredTable") -> getDBTableName())) {
                 $connection = Application::getInstance() -> getConnection();
                 $connection -> dropTable(UsersAnsweredTable::getTableName());
             }

@@ -3,11 +3,11 @@
 \Bitrix\Main\Loader::includeModule("sibhronik.quizes");
 
 use Bitrix\Main\Loader;
-use Sibhronik\Quiz;
-use Sibhronik\Quiz\QuizTable;
-use Sibhronik\Quiz\QuestionsTable;
-use Sibhronik\Quiz\AnswersTable;
-use Sibhronik\Quiz\UsersAnsweredTable;
+use Sibhronik\Quizes;
+use Sibhronik\Quizes\QuizesTable;
+use Sibhronik\Quizes\QuestionsTable;
+use Sibhronik\Quizes\AnswersTable;
+use Sibhronik\Quizes\UsersAnsweredTable;
 use Bitrix\Main\Type\DateTime;
 
 class SibhronikQuiz extends CBitrixComponent
@@ -21,7 +21,7 @@ class SibhronikQuiz extends CBitrixComponent
     {
         $quizes = [];
         $quizAnsweredUsers = [];
-        $queryQuizes = Sibhronik\Quiz\QuizTable::GetList();
+        $queryQuizes = Sibhronik\Quizes\QuizesTable::GetList();
         while ($quiz = $queryQuizes -> fetch()) {
             $quiz["DATE_CREATED"] = $quiz["DATE_CREATED"] == NULL ? "" : $quiz["DATE_CREATED"] -> format("d.m.Y H:i:s");
             $quizes[$quiz["ID"]] = $quiz;
@@ -34,21 +34,21 @@ class SibhronikQuiz extends CBitrixComponent
                 while ($getQuizAnsweredUser = $getQuizAnsweredUsers -> fetch()) {
                     $quizAnsweredUsers[$quiz["ID"]][] = $getQuizAnsweredUser["USER_ID"];
                 }
-                $queryQuestions = Sibhronik\Quiz\QuestionsTable::GetList([
+                $queryQuestions = Sibhronik\Quizes\QuestionsTable::GetList([
                     "select" => ["*"],
                     "filter" => ["QUIZ_ID" => $quiz["ID"]]
                 ]);
                 while ($question = $queryQuestions -> fetch()) {
                     $quizes[$quiz["ID"]]["QUESTIONS"][$question["ID"]] = $question;
                     if ($question["ID"] && intval($question["ID"]) > 0) {
-                        $queryAnswers = Sibhronik\Quiz\AnswersTable::GetList([
+                        $queryAnswers = Sibhronik\Quizes\AnswersTable::GetList([
                             "select" => ["*"],
                             "filter" => ["QUIZ_ID" => $quiz["ID"], "QUESTION_ID" => $question["ID"]]
                         ]);
                         while ($answer = $queryAnswers -> fetch()) {
                             $quizes[$quiz["ID"]]["QUESTIONS"][$question["ID"]]["ANSWERS"][$answer["ID"]] = $answer;
                             if ($answer["ID"] && intval($answer["ID"]) > 0) {
-                                $queryUserAnswers = Sibhronik\Quiz\UserAnswersTable::GetList([
+                                $queryUserAnswers = Sibhronik\Quizes\UserAnswersTable::GetList([
                                     "select" => ["*"],
                                     "filter" => ["QUIZ_ID" => $quiz["ID"], "QUESTION_ID" => $question["ID"], "ANSWER_ID" => $answer["ID"]]
                                 ]);
@@ -69,26 +69,26 @@ class SibhronikQuiz extends CBitrixComponent
     private function getQuizesAnsweres()
     {
         $quizUserAnswers = [];
-        $queryQuizes = Sibhronik\Quiz\QuizTable::GetList();
+        $queryQuizes = Sibhronik\Quizes\QuizesTable::GetList();
         while ($quiz = $queryQuizes -> fetch()) {
             $quiz["DATE_CREATED"] = $quiz["DATE_CREATED"] -> format("d.m.Y H:i:s");
             $quizUserAnswers[$quiz["ID"]] = $quiz;
-            $queryUserAnswers = Sibhronik\Quiz\UserAnswersTable::GetList([
+            $queryUserAnswers = Sibhronik\Quizes\UserAnswersTable::GetList([
                 "select" => ["*"],
                 "filter" => ["QUIZ_ID" => $quiz["ID"]]
             ]);
             while ($userAnswer = $queryUserAnswers -> fetch()) {
-                $queryQuestions = Sibhronik\Quiz\QuestionsTable::GetList([
+                $queryQuestions = Sibhronik\Quizes\QuestionsTable::GetList([
                     "select" => ["*"],
                     "filter" => ["ID" => $userAnswer["QUESTION_ID"]]
                 ]);
                 while ($question = $queryQuestions -> fetch()) {
-                    $queryAnswers = Sibhronik\Quiz\AnswersTable::GetList([
+                    $queryAnswers = Sibhronik\Quizes\AnswersTable::GetList([
                         "select" => ["*"],
                         "filter" => ["QUIZ_ID" => $quiz["ID"], "QUESTION_ID" => $question["ID"]]
                     ]);
                     while ($answer = $queryAnswers->fetch()) {
-                        $secondQueryUserAnswers = Sibhronik\Quiz\UserAnswersTable::GetList([
+                        $secondQueryUserAnswers = Sibhronik\Quizes\UserAnswersTable::GetList([
                             "select" => ["*"],
                             "filter" => ["QUIZ_ID" => $quiz["ID"], "QUESTION_ID" => $question["ID"], "ANSWER_ID" => $answer["ID"], "USER_ID" => $userAnswer["USER_ID"]]
                         ]);
