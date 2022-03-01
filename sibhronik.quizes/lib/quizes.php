@@ -1,15 +1,15 @@
 <?php
 
-namespace Sibhronik\Quiz;
+namespace Sibhronik\Quizes;
 
 use Bitrix\Main\Entity;
 use Bitrix\Main\Entity\Validator;
 
-class QuizTable extends Entity\DataManager
+class QuizesTable extends Entity\DataManager
 {
     public static function getTableName()
     {
-        return "sibhronik_quiz";
+        return "sibhronik_quizes";
     }
 
     public static function getMap()

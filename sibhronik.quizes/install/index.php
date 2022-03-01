@@ -13,7 +13,7 @@ use Sibhronik\Quiz\UsersAnsweredTable;
 
 Loc::loadMessages(__FILE__);
 
-class sibhronik_quiz extends CModule
+class sibhronik_quizes extends CModule
 {
     public function __construct()
     {
