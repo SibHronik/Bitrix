@@ -13,5 +13,5 @@
 # company.news.statistics
 Компонент для работы с постами пользователей
 
-#sibhronik.quiz
+# sibhronik.quiz
 Модуль для опросов. v1.0
