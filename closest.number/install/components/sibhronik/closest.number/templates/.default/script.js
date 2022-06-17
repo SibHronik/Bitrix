@@ -14,7 +14,6 @@ BX.ready(() => {
             BX.ajax.runAction('closest:number.api.search.' + method, {
                 data: data
             }).then(response => {
-                console.log(response);
                 if (response.data.ERROR != undefined) {
                     document.getElementById('closest-number-warn-' + method).innerText = response.data.ERROR;
                     document.getElementById('closest-number-warn-' + method).style.display = 'block';
@@ -45,7 +44,6 @@ BX.ready(() => {
             let newArr = arr.replaceAll(' ', '');
             newArr = newArr.split(',');
             let result = newArr.sort((a, b) => Math.abs(num - a) - Math.abs(num - b) )[0];
-            console.log(result);
             document.getElementById('closest-number-result-text-' + method).innerText = result;
             document.getElementById('closest-number-result-' + method).style.display = 'block';
         }
