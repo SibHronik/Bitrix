@@ -1,0 +1,171 @@
+.closest-number-wrapper{
+    width: 100%;
+    height: auto;
+    margin: 0 auto;
+    padding: 0;
+}
+
+.closest-number-block{
+    box-sizing: border-box;
+    width: 100%;
+    height: auto;
+    margin: 0 auto 35px;
+    padding: 0 0 15px 0;
+    border-bottom: 1px dashed #5b5b5b;
+}
+
+.closest-number-title{
+    width: 100%;
+    height: auto;
+    margin: 0 auto;
+    padding: 0;
+    font-size: 18px;
+    font-weight: bold;
+    color: #2d2d2d;
+}
+
+.closest-number-title i{
+    font-size: 14px;
+    font-weight: normal;
+    color: #5b5b5b;
+}
+
+.closest-number-data{
+    width: 100%;
+    height: auto;
+    margin: 0 auto;
+    padding: 0;
+}
+
+.closest-number-array-wrapper{
+    width: 100%;
+    height: auto;
+    margin: 10px auto 0;
+    padding: 0;
+}
+
+.closest-number-array{
+    box-sizing: border-box;
+    width: 312px;
+    height: auto;
+    margin: 0;
+    padding: 5px 10px;
+    border: 1px solid #5b5b5b;
+    border-radius: 2px;
+    background: #fff;
+    font-size: 16px;
+}
+
+.closest-number-array-label i{
+    font-size: 13px;
+    font-weight: normal;
+    color: #5b5b5b;
+}
+
+.closest-number-input-wrapper{
+    width: 100%;
+    height: auto;
+    margin: 10px auto 0;
+    padding: 0;
+}
+
+.closest-number-input{
+    box-sizing: border-box;
+    width: 32px;
+    height: auto;
+    margin: 0;
+    padding: 5px 10px;
+    border: 1px solid #5b5b5b;
+    border-radius: 2px;
+    background: #fff;
+    font-size: 16px;
+}
+
+.closest-number-min-value-wrapper{
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-wrap: nowrap;
+    box-sizing: border-box;
+    width: 100%;
+    height: auto;
+    margin: 10px auto 0;
+    padding: 0;
+}
+
+.closest-number-min-value{
+    width: 15px;
+    height: 15px;
+    margin: 0 5px 0 0;
+    padding: 0;
+    border: 1px solid #2067B0;
+    border-radius: 2px;
+}
+
+.closest-number-send-data,
+.closest-number-send-data-js{
+    box-sizing: border-box;
+    width: 200px;
+    height: auto;
+    margin: 10px 0 0 0;
+    padding: 5px 10px;
+    background: #2067B0;
+    font-size: 16px;
+    text-align: center;
+    color: #fff;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.closest-number-send-data:hover,
+.closest-number-send-data-js:hover{
+    opacity: 0.8;
+}
+
+.closest-number-result{
+    display: none;
+    box-sizing: border-box;
+    width: 100%;
+    height: auto;
+    margin: 10px 0 0 0;
+    font-size: 16px;
+}
+
+.closest-number-warn{
+    display: none;
+    box-sizing: border-box;
+    width: 100%;
+    height: auto;
+    margin: 10px 0 0 0;
+    font-size: 16px;
+    color: #cc0000;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
